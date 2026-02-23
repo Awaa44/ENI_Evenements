@@ -42,6 +42,10 @@ class Sorties
     #[ORM\OneToMany(targetEntity: Inscriptions::class, mappedBy: 'sortie', orphanRemoval: true)]
     private Collection $inscriptions;
 
+    #[ORM\ManyToOne(inversedBy: 'sorties')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Participants $organisateur = null;
+
     public function __construct()
     {
         $this->inscriptions = new ArrayCollection();
@@ -162,6 +166,18 @@ class Sorties
                 $inscription->setSortie(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getOrganisateur(): ?Participants
+    {
+        return $this->organisateur;
+    }
+
+    public function setOrganisateur(?Participants $organisateur): static
+    {
+        $this->organisateur = $organisateur;
 
         return $this;
     }

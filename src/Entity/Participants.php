@@ -61,9 +61,16 @@ class Participants implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Inscriptions::class, mappedBy: 'participant', orphanRemoval: true)]
     private Collection $inscriptions;
 
+    /**
+     * @var Collection<int, Sorties>
+     */
+    #[ORM\OneToMany(targetEntity: Sorties::class, mappedBy: 'organisateur', orphanRemoval: true)]
+    private Collection $sorties;
+
     public function __construct()
     {
         $this->inscriptions = new ArrayCollection();
+        $this->sorties = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -243,6 +250,36 @@ class Participants implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($inscription->getParticipant() === $this) {
                 $inscription->setParticipant(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Sorties>
+     */
+    public function getSorties(): Collection
+    {
+        return $this->sorties;
+    }
+
+    public function addSorty(Sorties $sorty): static
+    {
+        if (!$this->sorties->contains($sorty)) {
+            $this->sorties->add($sorty);
+            $sorty->setOrganisateur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSorty(Sorties $sorty): static
+    {
+        if ($this->sorties->removeElement($sorty)) {
+            // set the owning side to null (unless already changed)
+            if ($sorty->getOrganisateur() === $this) {
+                $sorty->setOrganisateur(null);
             }
         }
 

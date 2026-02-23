@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\SortieRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: SortieRepository::class)]
@@ -33,6 +35,32 @@ class Sorties
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $urlPhoto = null;
+
+    /**
+     * @var Collection<int, Inscriptions>
+     */
+    #[ORM\OneToMany(targetEntity: Inscriptions::class, mappedBy: 'sortie', orphanRemoval: true)]
+    private Collection $inscriptions;
+
+    #[ORM\ManyToOne(inversedBy: 'sorties')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Participants $organisateur = null;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Etats $etats = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $etatSortie = null;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Lieux $lieux = null;
+
+    public function __construct()
+    {
+        $this->inscriptions = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -119,6 +147,84 @@ class Sorties
     public function setUrlPhoto(?string $urlPhoto): static
     {
         $this->urlPhoto = $urlPhoto;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Inscriptions>
+     */
+    public function getInscriptions(): Collection
+    {
+        return $this->inscriptions;
+    }
+
+    public function addInscription(Inscriptions $inscription): static
+    {
+        if (!$this->inscriptions->contains($inscription)) {
+            $this->inscriptions->add($inscription);
+            $inscription->setSortie($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInscription(Inscriptions $inscription): static
+    {
+        if ($this->inscriptions->removeElement($inscription)) {
+            // set the owning side to null (unless already changed)
+            if ($inscription->getSortie() === $this) {
+                $inscription->setSortie(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getOrganisateur(): ?Participants
+    {
+        return $this->organisateur;
+    }
+
+    public function setOrganisateur(?Participants $organisateur): static
+    {
+        $this->organisateur = $organisateur;
+
+        return $this;
+    }
+
+    public function getEtats(): ?Etats
+    {
+        return $this->etats;
+    }
+
+    public function setEtats(?Etats $etats): static
+    {
+        $this->etats = $etats;
+
+        return $this;
+    }
+
+    public function getEtatSortie(): ?int
+    {
+        return $this->etatSortie;
+    }
+
+    public function setEtatSortie(?int $etatSortie): static
+    {
+        $this->etatSortie = $etatSortie;
+
+        return $this;
+    }
+
+    public function getLieux(): ?Lieux
+    {
+        return $this->lieux;
+    }
+
+    public function setLieux(?Lieux $lieux): static
+    {
+        $this->lieux = $lieux;
 
         return $this;
     }

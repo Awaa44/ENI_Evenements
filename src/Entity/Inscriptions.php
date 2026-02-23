@@ -21,6 +21,9 @@ class Inscriptions
     #[ORM\JoinColumn(nullable: false)]
     private ?Sorties $sortie = null;
 
+    #[ORM\Column]
+    private ?\DateTime $dateInscription = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -46,6 +49,18 @@ class Inscriptions
     public function setSortie(?Sorties $sortie): static
     {
         $this->sortie = $sortie;
+
+        return $this;
+    }
+
+    public function getDateInscription(): ?\DateTime
+    {
+        return $this->dateInscription;
+    }
+
+    public function setDateInscription(\DateTime $dateInscription): static
+    {
+        $this->dateInscription = $dateInscription;
 
         return $this;
     }

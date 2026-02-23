@@ -2,22 +2,22 @@
 
 namespace App\Repository;
 
-use App\Entity\Site;
+use App\Entity\Sites;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Site>
+ * @extends ServiceEntityRepository<Sites>
  */
 class SiteRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Site::class);
+        parent::__construct($registry, Sites::class);
     }
 
     //    /**
-    //     * @return Site[] Returns an array of Site objects
+    //     * @return Sites[] Returns an array of Sites objects
     //     */
     //    public function findByExampleField($value): array
     //    {
@@ -31,7 +31,7 @@ class SiteRepository extends ServiceEntityRepository
     //        ;
     //    }
 
-    //    public function findOneBySomeField($value): ?Site
+    //    public function findOneBySomeField($value): ?Sites
     //    {
     //        return $this->createQueryBuilder('s')
     //            ->andWhere('s.exampleField = :val')

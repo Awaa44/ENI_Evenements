@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\Participant;
+use App\Entity\Participants;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
@@ -12,13 +12,13 @@ use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * @extends ServiceEntityRepository<Participant>
+ * @extends ServiceEntityRepository<Participants>
  */
 class ParticipantRepository extends ServiceEntityRepository implements PasswordUpgraderInterface, UserLoaderInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Participant::class);
+        parent::__construct($registry, Participants::class);
     }
 
     /**
@@ -26,7 +26,7 @@ class ParticipantRepository extends ServiceEntityRepository implements PasswordU
      */
     public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
     {
-        if (!$user instanceof Participant) {
+        if (!$user instanceof Participants) {
             throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', $user::class));
         }
 
@@ -36,7 +36,7 @@ class ParticipantRepository extends ServiceEntityRepository implements PasswordU
     }
 
     //    /**
-    //     * @return Participant[] Returns an array of Participant objects
+    //     * @return Participants[] Returns an array of Participants objects
     //     */
     //    public function findByExampleField($value): array
     //    {
@@ -50,7 +50,7 @@ class ParticipantRepository extends ServiceEntityRepository implements PasswordU
     //        ;
     //    }
 
-    //    public function findOneBySomeField($value): ?Participant
+    //    public function findOneBySomeField($value): ?Participants
     //    {
     //        return $this->createQueryBuilder('p')
     //            ->andWhere('p.exampleField = :val')

@@ -46,6 +46,17 @@ class Sorties
     #[ORM\JoinColumn(nullable: false)]
     private ?Participants $organisateur = null;
 
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Etats $etats = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $etatSortie = null;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Lieux $lieux = null;
+
     public function __construct()
     {
         $this->inscriptions = new ArrayCollection();
@@ -178,6 +189,42 @@ class Sorties
     public function setOrganisateur(?Participants $organisateur): static
     {
         $this->organisateur = $organisateur;
+
+        return $this;
+    }
+
+    public function getEtats(): ?Etats
+    {
+        return $this->etats;
+    }
+
+    public function setEtats(?Etats $etats): static
+    {
+        $this->etats = $etats;
+
+        return $this;
+    }
+
+    public function getEtatSortie(): ?int
+    {
+        return $this->etatSortie;
+    }
+
+    public function setEtatSortie(?int $etatSortie): static
+    {
+        $this->etatSortie = $etatSortie;
+
+        return $this;
+    }
+
+    public function getLieux(): ?Lieux
+    {
+        return $this->lieux;
+    }
+
+    public function setLieux(?Lieux $lieux): static
+    {
+        $this->lieux = $lieux;
 
         return $this;
     }

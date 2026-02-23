@@ -67,6 +67,10 @@ class Participants implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Sorties::class, mappedBy: 'organisateur', orphanRemoval: true)]
     private Collection $sorties;
 
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Sites $sites = null;
+
     public function __construct()
     {
         $this->inscriptions = new ArrayCollection();
@@ -282,6 +286,18 @@ class Participants implements UserInterface, PasswordAuthenticatedUserInterface
                 $sorty->setOrganisateur(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSites(): ?Sites
+    {
+        return $this->sites;
+    }
+
+    public function setSites(?Sites $sites): static
+    {
+        $this->sites = $sites;
 
         return $this;
     }

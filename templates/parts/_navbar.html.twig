@@ -22,31 +22,31 @@
                     <a class="nav-link" href="#">#</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Liste de souhaits</a>
+                    <a class="nav-link" href="#">#</a>
                 </li>
-                {% if is_granted('IS_AUTHENTICATED') %}
+                {#{% if is_granted('IS_AUTHENTICATED') %}#}
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Ajouter un souhait</a>
+                        <a class="nav-link" href="#">#</a>
                     </li>
-                    {% if is_granted('ROLE_ADMIN') %}
+                    {#{% if is_granted('ROLE_ADMIN') %}#}
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Ajouter une catégorie</a>
+                            <a class="nav-link" href="#">Ajouter une sortie</a>
                         </li>
-                    {% endif %}
+                   {# {% endif %}#}
                     <li class="nav-item">
                         <a class="nav-link" aria-disabled="true">"Bonjour {{ app.user.username }}"</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path('app_logout') }}">Logout</a>
+                        <a class="nav-link" href="{#{{ path('app_logout') }}#}">Logout</a>
                     </li>
                 {% else %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path('app_login') }}">Login</a>
+                        <a class="nav-link" href="{#{{ path('app_login') }}#}">Login</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path('app_register') }}">Register</a>
+                        <a class="nav-link" href="{#{{ path('app_register') }}#}">Register</a>
                     </li>
-                {% endif %}
+               {# {% endif %}#}
             </ul>
         </div>
     </div>

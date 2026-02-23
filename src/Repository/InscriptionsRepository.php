@@ -2,39 +2,39 @@
 
 namespace App\Repository;
 
-use App\Entity\Sorties;
+use App\Entity\Inscriptions;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Sorties>
+ * @extends ServiceEntityRepository<Inscriptions>
  */
-class SortieRepository extends ServiceEntityRepository
+class InscriptionsRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Sorties::class);
+        parent::__construct($registry, Inscriptions::class);
     }
 
 //    /**
-//     * @return Sorties[] Returns an array of Sorties objects
+//     * @return Inscriptions[] Returns an array of Inscriptions objects
 //     */
 //    public function findByExampleField($value): array
 //    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
+//        return $this->createQueryBuilder('i')
+//            ->andWhere('i.exampleField = :val')
 //            ->setParameter('val', $value)
-//            ->orderBy('s.id', 'ASC')
+//            ->orderBy('i.id', 'ASC')
 //            ->setMaxResults(10)
 //            ->getQuery()
 //            ->getResult()
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?Sorties
+//    public function findOneBySomeField($value): ?Inscriptions
 //    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
+//        return $this->createQueryBuilder('i')
+//            ->andWhere('i.exampleField = :val')
 //            ->setParameter('val', $value)
 //            ->getQuery()
 //            ->getOneOrNullResult()

@@ -2,7 +2,7 @@
     <div class="container">
         <!-- Logo -->
         <a class="navbar-brand fs-3" href="#">
-            <img src="{{ asset('') }}" width="40" height="40" class="d-inline-block align-center" alt="Logo">
+            <img src="{{ asset('images/logo.jpeg') }}" width="60" height="60" class="d-inline-block align-center" alt="Logo">
             Sortir.com
         </a>
 
@@ -16,7 +16,7 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a class="nav-link active" href="#">Accueil</a>
+                    <a class="nav-link active" href="{{ path('app_home') }}">Accueil</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">#</a>
@@ -26,11 +26,11 @@
                 </li>
                 {#{% if is_granted('IS_AUTHENTICATED') %}#}
                     <li class="nav-item">
-                        <a class="nav-link" href="#">#</a>
+                        <a class="nav-link" href="#">Ajouter une sortie</a>
                     </li>
-                    {#{% if is_granted('ROLE_ADMIN') %}#}
+                    {% if is_granted('ROLE_ADMIN') %}
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Ajouter une sortie</a>
+                            <a class="nav-link" href="#">#</a>
                         </li>
                    {# {% endif %}#}
                     <li class="nav-item">
@@ -46,7 +46,7 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{#{{ path('app_register') }}#}">Register</a>
                     </li>
-               {# {% endif %}#}
+                {% endif %}
             </ul>
         </div>
     </div>

@@ -26,23 +26,20 @@ class SortieRepository extends ServiceEntityRepository
                 'sorties.nbInscriptionMax',
                 'etats.libelle AS etat',
                 'organisateurParticipant.nom AS organisateur',
-                'COUNT(DISTINCT inscriptions.id) AS nbInscrits',
-                "CASE WHEN inscriptionParticipant.id IS NOT NULL THEN 'X' ELSE '' END AS inscrit"
+                'COUNT(DISTINCT inscriptionParticipant.id) AS nbInscrits',
+                "CASE WHEN inscriptionParticipant.isInscrit = true THEN 'X' ELSE '' END AS inscrit"
             )
 
-            // 🔥 On filtre uniquement les inscriptions du participant
-            ->innerJoin(
+            ->leftJoin(
                 'sorties.inscriptions',
                 'inscriptionParticipant',
                 'WITH',
                 'inscriptionParticipant.participant = :participantId'
             )
 
-            // Pour compter le nombre total d'inscrits
-            ->leftJoin('sorties.inscriptions', 'inscriptions')
+//            ->leftJoin('sorties.inscriptions', 'inscriptions')
 
             ->leftJoin('sorties.etats', 'etats')
-
             ->leftJoin('sorties.organisateur', 'organisateurParticipant')
 
             ->setParameter('participantId', $participantId)
@@ -50,7 +47,8 @@ class SortieRepository extends ServiceEntityRepository
             ->groupBy(
                 'sorties.id',
                 'etats.libelle',
-                'organisateurParticipant.nom'
+                'organisateurParticipant.nom',
+                'inscriptionParticipant.id'
             )
 
             ->getQuery()

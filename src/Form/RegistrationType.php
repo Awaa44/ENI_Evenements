@@ -38,7 +38,7 @@ class RegistrationType extends AbstractType
             ])
             ->add('sites', EntityType::class, [
                 'class' => Sites::class,
-                'choice_label' => 'nomSite',
+                'choice_label' => 'nom_site',
             ])
         ;
     }

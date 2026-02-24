@@ -41,7 +41,7 @@ final class UserController extends AbstractController
         }
 
         return $this->render('inscription/register.html.twig', [
-            'form' => $form->createView(),
+            'registrationForm' => $form->createView(),
         ]);
     }
 

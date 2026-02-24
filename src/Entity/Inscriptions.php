@@ -24,6 +24,9 @@ class Inscriptions
     #[ORM\Column]
     private ?\DateTime $dateInscription = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $isInscrit = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -61,6 +64,18 @@ class Inscriptions
     public function setDateInscription(\DateTime $dateInscription): static
     {
         $this->dateInscription = $dateInscription;
+
+        return $this;
+    }
+
+    public function isInscrit(): ?bool
+    {
+        return $this->isInscrit;
+    }
+
+    public function setIsInscrit(?bool $isInscrit): static
+    {
+        $this->isInscrit = $isInscrit;
 
         return $this;
     }

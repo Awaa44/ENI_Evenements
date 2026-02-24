@@ -24,102 +24,148 @@ class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
-        /** -------------------------
+        /* =========================
          * ETATS
-         * ------------------------- */
-        $etatsData = ['Créée', 'Ouverte', 'Clôturée', 'Activité en cours', 'Passée', 'Annulée'];
+         * ========================= */
+        $etatsLabels = ['Créée', 'Ouverte', 'Clôturée', 'Activité en cours', 'Passée', 'Annulée'];
         $etats = [];
 
-        foreach ($etatsData as $libelle) {
+        foreach ($etatsLabels as $label) {
             $etat = new Etats();
-            $etat->setLibelle($libelle);
+            $etat->setLibelle($label);
             $manager->persist($etat);
             $etats[] = $etat;
         }
 
-        /** -------------------------
-         * SITES
-         * ------------------------- */
-        $site1 = new Sites();
-        $site1->setNomSite('Nantes');
-        $manager->persist($site1);
-
-        $site2 = new Sites();
-        $site2->setNomSite('Rennes');
-        $manager->persist($site2);
-
-        /** -------------------------
+        /* =========================
          * VILLES
-         * ------------------------- */
-        $ville = new Villes();
-        $ville->setNomVille('Nantes');
-        $ville->setCodePostal('44000');
-        $manager->persist($ville);
+         * ========================= */
+        $villesData = [
+            ['Paris', '75000'],
+            ['Nantes', '44000'],
+            ['Rennes', '35000'],
+            ['Lyon', '69000'],
+            ['Bordeaux', '33000']
+        ];
 
-        /** -------------------------
+        $villes = [];
+
+        foreach ($villesData as [$nom, $cp]) {
+            $ville = new Villes();
+            $ville->setNomVille($nom);
+            $ville->setCodePostal($cp);
+            $manager->persist($ville);
+            $villes[] = $ville;
+        }
+
+        /* =========================
+         * SITES
+         * ========================= */
+        $sites = [];
+
+        foreach ($villes as $ville) {
+            $site = new Sites();
+            $site->setNomSite('Site ' . $ville->getNomVille());
+            $manager->persist($site);
+            $sites[] = $site;
+        }
+
+        /* =========================
          * LIEUX
-         * ------------------------- */
-        $lieu = new Lieux();
-        $lieu->setNomLieu('Parc de Procé');
-        $lieu->setRue('Rue des Dervallières');
-        $lieu->setLatitude(47.2184);
-        $lieu->setLongitude(-1.5536);
-        $lieu->setVilles($ville);
-        $manager->persist($lieu);
+         * ========================= */
+        $lieux = [];
 
-        /** -------------------------
-         * PARTICIPANTS
-         * ------------------------- */
+        foreach ($villes as $ville) {
+            for ($i = 1; $i <= 2; $i++) {
+                $lieu = new Lieux();
+                $lieu->setNomLieu("Lieu $i - " . $ville->getNomVille());
+                $lieu->setRue("Rue Exemple $i");
+                $lieu->setLatitude(mt_rand(40, 50) + mt_rand() / mt_getrandmax());
+                $lieu->setLongitude(mt_rand(-5, 5) + mt_rand() / mt_getrandmax());
+                $lieu->setVilles($ville);
+
+                $manager->persist($lieu);
+                $lieux[] = $lieu;
+            }
+        }
+
+        /* =========================
+         * PARTICIPANTS (REALISTES)
+         * ========================= */
+
+        $noms = ['Martin','Bernard','Dubois','Thomas','Robert','Petit','Durand','Leroy'];
+        $prenoms = ['Jean','Paul','Marie','Luc','Emma','Sophie','Lucas','Julie'];
+
         $participants = [];
 
-        for ($i = 1; $i <= 5; $i++) {
+        for ($i = 1; $i <= 20; $i++) {
+
             $participant = new Participants();
-            $participant->setEmail("user$i@mail.fr");
-            $participant->setPseudo("user$i");
-            $participant->setNom("Nom$i");
-            $participant->setPrenom("Prenom$i");
-            $participant->setTelephone("060000000$i");
-            $participant->setRoles(['ROLE_USER']);
+            $nom = $noms[array_rand($noms)];
+            $prenom = $prenoms[array_rand($prenoms)];
+
+            $participant->setEmail(strtolower($prenom.'.'.$nom.$i.'@mail.fr'));
+            $participant->setPseudo(strtolower($prenom.$i));
+            $participant->setNom($nom);
+            $participant->setPrenom($prenom);
+            $participant->setTelephone('06'.rand(10000000,99999999));
+            $participant->setRoles($i === 1 ? ['ROLE_ADMIN'] : ['ROLE_USER']);
             $participant->setAdministrateur($i === 1);
             $participant->setActif(true);
-            $participant->setSites($site1);
+            $participant->setSites($sites[array_rand($sites)]);
 
-            $hashedPassword = $this->passwordHasher->hashPassword($participant, 'password');
-            $participant->setPassword($hashedPassword);
+            $participant->setPassword(
+                $this->passwordHasher->hashPassword($participant, 'password')
+            );
 
             $manager->persist($participant);
             $participants[] = $participant;
         }
 
-        /** -------------------------
-         * SORTIES
-         * ------------------------- */
+        /* =========================
+         * SORTIES REALISTES
+         * ========================= */
+
+        $themes = ['Randonnée', 'Afterwork', 'Conférence', 'Tournoi Sportif', 'Visite Culturelle', 'Apéro Réseau'];
+
         $sorties = [];
 
-        for ($i = 1; $i <= 3; $i++) {
+        for ($i = 1; $i <= 15; $i++) {
+
             $sortie = new Sorties();
-            $sortie->setNom("Sortie $i");
-            $sortie->setDateHeureDebut(new \DateTime('+'.$i.' days'));
-            $sortie->setDuree(120);
-            $sortie->setDateLimiteInscription(new \DateTime('+'.($i-1).' days'));
-            $sortie->setNbInscriptionMax(10);
-            $sortie->setInfosSortie("Description sortie $i");
+            $sortie->setNom($themes[array_rand($themes)] . " #$i");
+            $sortie->setDateHeureDebut((new \DateTime())->modify('+' . rand(1,30) . ' days'));
+            $sortie->setDuree(rand(60,240));
+            $sortie->setDateLimiteInscription((new \DateTime())->modify('+' . rand(0,10) . ' days'));
+            $sortie->setNbInscriptionMax(rand(5,30));
+            $sortie->setInfosSortie("Sortie organisée autour du thème " . $sortie->getNom());
             $sortie->setUrlPhoto(null);
-            $sortie->setOrganisateur($participants[0]);
-            $sortie->setEtats($etats[1]); // Ouverte
-            $sortie->setLieux($lieu);
+            $sortie->setOrganisateur($participants[array_rand($participants)]);
+            $sortie->setEtats($etats[array_rand($etats)]);
+            $sortie->setLieux($lieux[array_rand($lieux)]);
 
             $manager->persist($sortie);
             $sorties[] = $sortie;
         }
 
-        /** -------------------------
-         * INSCRIPTIONS
-         * ------------------------- */
+        /* =========================
+         * INSCRIPTIONS ALEATOIRES
+         * ========================= */
+
         foreach ($sorties as $sortie) {
-            foreach ($participants as $participant) {
+
+            $nbParticipants = rand(3, 10);
+            $participantsShuffle = $participants;
+            shuffle($participantsShuffle);
+
+            for ($i = 0; $i < $nbParticipants; $i++) {
+
+                if (!isset($participantsShuffle[$i])) {
+                    break;
+                }
+
                 $inscription = new Inscriptions();
-                $inscription->setParticipant($participant);
+                $inscription->setParticipant($participantsShuffle[$i]);
                 $inscription->setSortie($sortie);
                 $inscription->setDateInscription(new \DateTime());
 

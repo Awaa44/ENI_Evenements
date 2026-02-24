@@ -2,8 +2,8 @@
     <div class="container">
         <!-- Logo -->
         <a class="navbar-brand fs-3" href="#">
-            <img src="{{ asset('') }}" width="40" height="40" class="d-inline-block align-center" alt="Logo">
-            Bucket-List
+            <img src="{{ asset('images/logo.jpeg') }}" width="60" height="60" class="d-inline-block align-center" alt="Logo">
+            Sortir.com
         </a>
 
         <!-- Bouton burger (visible sur mobile) -->
@@ -14,40 +14,40 @@
 
         <!-- Menu (collapse sur mobile) -->
         <div class="collapse navbar-collapse" id="navbarNav">
-{#            <ul class="navbar-nav ms-auto">#}
-{#                <li class="nav-item">#}
-{#                    <a class="nav-link active" href="#">Accueil</a>#}
-{#                </li>#}
-{#                <li class="nav-item">#}
-{#                    <a class="nav-link" href="#">#</a>#}
-{#                </li>#}
-{#                <li class="nav-item">#}
-{#                    <a class="nav-link" href="#">Liste de souhaits</a>#}
-{#                </li>#}
-{#                {% if is_granted('IS_AUTHENTICATED') %}#}
-{#                    <li class="nav-item">#}
-{#                        <a class="nav-link" href="#">Ajouter un souhait</a>#}
-{#                    </li>#}
-{#                    {% if is_granted('ROLE_ADMIN') %}#}
-{#                        <li class="nav-item">#}
-{#                            <a class="nav-link" href="#">Ajouter une catégorie</a>#}
-{#                        </li>#}
-{#                    {% endif %}#}
-{#                    <li class="nav-item">#}
-{#                        <a class="nav-link" aria-disabled="true">"Bonjour {{ app.user.username }}"</a>#}
-{#                    </li>#}
-{#                    <li class="nav-item">#}
-{#                        <a class="nav-link" href="{{ path('app_logout') }}">Logout</a>#}
-{#                    </li>#}
-{#                {% else %}#}
-{#                    <li class="nav-item">#}
-{#                        <a class="nav-link" href="{{ path('app_login') }}">Login</a>#}
-{#                    </li>#}
-{#                    <li class="nav-item">#}
-{#                        <a class="nav-link" href="{{ path('app_register') }}">Register</a>#}
-{#                    </li>#}
-{#                {% endif %}#}
-{#            </ul>#}
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" href="{{ path('app_home') }}">Accueil</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">#</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">#</a>
+                </li>
+                {#{% if is_granted('IS_AUTHENTICATED') %}#}
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Ajouter une sortie</a>
+                    </li>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">#</a>
+                        </li>
+                   {# {% endif %}#}
+                    <li class="nav-item">
+                        <a class="nav-link" aria-disabled="true">"Bonjour {{ app.user.username }}"</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{#{{ path('app_logout') }}#}">Logout</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{#{{ path('app_login') }}#}">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{#{{ path('app_register') }}#}">Register</a>
+                    </li>
+                {% endif %}
+            </ul>
         </div>
     </div>
 </nav>

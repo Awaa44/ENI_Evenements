@@ -1,3 +1,21 @@
+html, body {
+    height: 100%;
+}
+
 body {
-    background-color: skyblue;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+.bg-custom {
+    background-color: #608db5;
+}
+
+footer .text-muted,
+footer a.text-muted {
+    color: #333 !important; /* Gris très foncé */
 }

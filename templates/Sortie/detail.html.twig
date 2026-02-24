@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <h2 class="text-center p-3">Détail d'une sortie</h2>
+
+    <div class="card mt-2 mb-2 w-150 m-auto">
+        <div class="card-body">
+            <h3 class="card-title text-center">Description de la sortie : </h3>
+            <p class="card-body text-center"></p>
+            <p class="card-body pt-0">Nom : {{ sortie.nom }}</p>
+            <p class="card-body pt-0">Date et heure de la sortie : {{ sortie.dateHeureDebut|date("d/m/Y h:m") }}</p>
+            <p class="card-body pt-0">Date limite d'inscription : {{ sortie.dateLimiteInscription|date("d/m/Y h:m") }}</p>
+            <p class="card-body pt-0">Nombre de place : {{ sortie.nbInscriptionMax }}</p>
+            <p class="card-body pt-0">Durée : {{ sortie.duree }} min</p>
+            <p class="card-body pt-0">Description et infos : {{ sortie.infosSortie }}</p>
+            <p class="card-body pt-0">Ville organisatrice : {{ sortie.lieux.villes.nomVille }}</p>
+            <p class="card-body pt-0">Lieu : {{ sortie.lieux.nomLieu }}</p>
+            <p class="card-body pt-0">Rue : {{ sortie.lieux.rue }}</p>
+            <p class="card-body pt-0">Code postal : {{ sortie.lieux.villes.codePostal }}</p>
+            <p class="card-body pt-0">Latitude : {{ sortie.lieux.latitude }}</p>
+            <p class="card-body pt-0">Longitude : {{ sortie.lieux.longitude }}</p>
+        </div>
+    </div>
+    <h3>Liste des participants à la sortie</h3>
+    <div style="max-height: 200px; overflow-y: auto; border: 1px solid #ccc; width: 400px;">
+        <table class="table table-striped table-bordered mb-0">
+            <thead class="table-secondary">
+            <tr>
+                <th>Pseudo</th>
+                <th>Nom</th>
+            </tr>
+            </thead>
+            <tbody>
+        {% for inscription in sortie.inscriptions %}
+            <tr>
+                <td>{{ inscription.participant.pseudo }}</td>
+                <td>{{ inscription.participant.nom }}</td>
+            </tr>
+        {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <br>
+{% endblock %}

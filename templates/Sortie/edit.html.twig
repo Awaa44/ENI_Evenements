@@ -1,24 +1,69 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Créer une sortie | {{ parent() }} {% endblock %}
+
 {% block body %}
-
-    <h2 class="text-center p-3">Ajouter une sortie</h2>
-
-    <div class="card mt-2 mb-2 w-50 m-auto">
-        <div class="card-body">
-            <h5 class="card-title text-center"></h5>
-            <p class="card-body text-center"></p>
-            <p class="card-body pb-0-1"><strong>Description de la sortie : </strong></p>
-            <p class="card-body pt-0"></p>
-            <div class="text-center">
-                <a class="btn btn-warning"
-                   href="#" role="button">Modifier</a>
-                <a href="#"
-                   class="btn btn-danger"
-                   onclick="return confirm('Etes-vous sûr???')"
-                >Supprimer</a>
+    <h2 class="text-center p-2">Créer une sortie</h2>
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-6">
+            {{ form_start(sortie_form) }}
+            <div class="group">
+                {{ form_label(sortie_form.nom) }}
+                {{ form_widget(sortie_form.nom) }}
+                {{ form_errors(sortie_form.nom) }}
             </div>
+            <div class="group">
+                {{ form_label(sortie_form.dateHeureDebut) }}
+                {{ form_widget(sortie_form.dateHeureDebut) }}
+                {{ form_errors(sortie_form.dateHeureDebut) }}
+            </div>
+            <div class="group">
+                {{ form_label(sortie_form.dateLimiteInscription) }}
+                {{ form_widget(sortie_form.dateLimiteInscription) }}
+                {{ form_errors(sortie_form.dateLimiteInscription) }}
+            </div>
+            <div class="group">
+                {{ form_label(sortie_form.duree) }}
+                {{ form_widget(sortie_form.duree) }}
+                {{ form_errors(sortie_form.duree) }}
+            </div>
+            <div class="group">
+                {{ form_label(sortie_form.nbInscriptionMax) }}
+                {{ form_widget(sortie_form.nbInscriptionMax) }}
+                {{ form_errors(sortie_form.nbInscriptionMax) }}
+            </div>
+            <div class="group">
+                {{ form_label(sortie_form.infosSortie) }}
+                {{ form_widget(sortie_form.infosSortie) }}
+                {{ form_errors(sortie_form.infosSortie) }}
+            </div>
+            <div class="group">
+                {{ form_label(sortie_form.villes) }}
+                {{ form_widget(sortie_form.villes) }}
+                {{ form_errors(sortie_form.villes) }}
+            </div>
+            <div class="group">
+                {{ form_label(sortie_form.lieux) }}
+                {{ form_widget(sortie_form.lieux) }}
+                {{ form_errors(sortie_form.lieux) }}
+            </div>
+            <br>
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary">
+                    Enregistrer
+                </button>
+                <a class="btn btn-warning"
+                   href="" role="button">
+                    Publier la sortie
+                </a>
+                <button type="reset" class="btn btn-secondary">
+                    Annuler
+                </button>
+
+            </div>
+            {{ form_end(sortie_form) }}
         </div>
     </div>
 
+    <br>
 {% endblock %}

@@ -64,7 +64,7 @@ class ParticipantRepository extends ServiceEntityRepository implements PasswordU
     public function loadUserByIdentifier(string $identifier): ?UserInterface
     {
         return $this->createQueryBuilder('u')
-            ->andWhere('u.username = :identifier')
+            ->andWhere('u.pseudo = :identifier')
             ->orWhere('u.email = :identifier')
             ->setParameter('identifier', $identifier)
             ->getQuery()

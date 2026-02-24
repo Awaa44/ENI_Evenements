@@ -37,7 +37,7 @@ final class SortieController extends AbstractController
             //enregistrement de l'organisateur par défaut avec la personne connectée
             $sortie->setOrganisateur($this->getUser());
             //mettre l'état créée par défaut
-            $sortie->setEtatSortie(7);
+            $sortie->setEtatSortie(1);
 
             $em->persist($sortie);
             $em->flush();

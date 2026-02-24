@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <h2 class="text-center p-3">Ajouter une sortie</h2>
+
+    <div class="card mt-2 mb-2 w-50 m-auto">
+        <div class="card-body">
+            <h5 class="card-title text-center"></h5>
+            <p class="card-body text-center"></p>
+            <p class="card-body pb-0-1"><strong>Description de la sortie : </strong></p>
+            <p class="card-body pt-0"></p>
+            <div class="text-center">
+                <a class="btn btn-warning"
+                   href="#" role="button">Modifier</a>
+                <a href="#"
+                   class="btn btn-danger"
+                   onclick="return confirm('Etes-vous sûr???')"
+                >Supprimer</a>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

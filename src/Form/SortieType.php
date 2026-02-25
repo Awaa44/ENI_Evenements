@@ -32,7 +32,7 @@ class SortieType extends AbstractType
                 'required' => false,
             ])
             ->add('dateLimiteInscription', null, [
-            'label' => 'Date et heure de la sortie',
+            'label' => 'Date limite d\'inscription',
             'required' => false,
             ])
             ->add('duree', IntegerType::class, [
@@ -53,11 +53,6 @@ class SortieType extends AbstractType
                 'class' => Lieux::class,
                 'choice_label' => 'nomLieu',
                 'label' => 'Lieu',
-            ])
-
-            ->add('etats', EntityType::class, [
-                'class' => Etats::class,
-                'choice_label' => 'libelle',
             ])
 
             ->add('villes', EntityType::class, [

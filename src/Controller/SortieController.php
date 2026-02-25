@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Sorties;
 use App\Form\SortieType;
+use App\Repository\ParticipantRepository;
 use App\Repository\SortieRepository;
 use App\Repository\VilleRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -27,7 +28,7 @@ final class SortieController extends AbstractController
     }
 
     #[Route('/create', name: '_create')]
-    public function createSortie(Request $request, EntityManagerInterface $em): Response
+    public function createSortie(Request $request, EntityManagerInterface $em, ParticipantRepository $participantRepository): Response
     {
         $sortie = new Sorties();
         $sortieForm = $this->createForm(SortieType::class, $sortie);
@@ -35,8 +36,11 @@ final class SortieController extends AbstractController
 
         if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
             //enregistrement de l'organisateur par défaut avec la personne connectée
-            $sortie->setOrganisateur($this->getUser());
+            //$sortie->setOrganisateur($this->getUser());
+            $participant = $participantRepository->find(1);
+            $sortie->setOrganisateur($participant);
             //mettre l'état créée par défaut
+
             $sortie->setEtatSortie(1);
 
             $em->persist($sortie);

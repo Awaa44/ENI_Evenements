@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Etats;
 use App\Entity\Lieux;
 use App\Entity\Participants;
+use App\Entity\Sites;
 use App\Entity\Sorties;
 use App\Entity\Villes;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -62,6 +63,7 @@ class SortieType extends AbstractType
                 'mapped' => false,
                 'required' => false,
             ])
+
         ;
     }
 

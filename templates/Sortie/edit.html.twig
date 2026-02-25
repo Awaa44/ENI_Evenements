@@ -6,7 +6,10 @@
     <h2 class="text-center p-2">Créer une sortie</h2>
     <div class="row justify-content-center">
         <div class="col-12 col-md-6">
+
             {{ form_start(sortie_form) }}
+            {{ form_widget(sortie_form.lieux, {'attr': {'class': 'form-select d-none'}}) }}
+
             <div class="group">
                 {{ form_label(sortie_form.nom) }}
                 {{ form_widget(sortie_form.nom) }}
@@ -29,7 +32,6 @@
                     <span class="input-group-text">minutes</span>
                 </div>
                 {{ form_errors(sortie_form.duree) }}
-                <p>minutes</p>
             </div>
             <div class="group">
                 {{ form_label(sortie_form.nbInscriptionMax) }}
@@ -41,6 +43,8 @@
                 {{ form_widget(sortie_form.infosSortie) }}
                 {{ form_errors(sortie_form.infosSortie) }}
             </div>
+            <br>
+            <p class="card-body pt-0">Site organisateur : {{ sortie.organisateur.sites.nomSite }}</p>
             <div class="group">
                 {{ form_label(sortie_form.villes) }}
                 {{ form_widget(sortie_form.villes) }}
@@ -48,9 +52,62 @@
             </div>
             <div class="group">
                 {{ form_label(sortie_form.lieux) }}
-                {{ form_widget(sortie_form.lieux) }}
+                <div><select class="form-select" id="lieu-select">
+                        <option value="">--Sélectionner un lieu--</option>
+                    </select>
+                </div>
+
+                <script>
+                    document.getElementById('sortie_villes').addEventListener('change', function() {
+                        const villeId = this.value;
+                        if (villeId) {
+                            document.getElementById('lieu-select').innerHTML = '';
+                            const defaultOption = document.createElement('option');
+                            defaultOption.value = '';
+                            defaultOption.textContent = '--Sélectionner un lieu--';
+                            document.getElementById('lieu-select').appendChild(defaultOption);
+                            //appel de la route ajax créée dans le controller
+                            fetch(`/sortie/ville/${villeId}`)
+                                .then(response => response.json())
+                                .then(data => {
+                                    //récupération des informations
+                                    for (const datum of data) {
+                                        const option = document.createElement('option');
+                                        option.value = datum.idLieux;
+                                        option.textContent = datum.nomLieux;
+                                        document.getElementById('lieu-select').appendChild(option);
+                                    }
+                                });
+                        } else {
+                            document.getElementById('lieu-select').innerHTML = '';
+                        }
+                    });
+                </script>
                 {{ form_errors(sortie_form.lieux) }}
             </div>
+            <br>
+            <p class="card-body pt-0">Rue : <span id="lieu-rue"></span></p>
+            <p class="card-body pt-0">Code postal : <span id="lieu-cp"></span></p>
+            <script>
+                document.getElementById('lieu-select').addEventListener('change', function() {
+                    const lieuId = this.value;
+                    if (lieuId) {
+                        //compléter le champ lieu avec le select-lieu custom
+                        document.getElementById('sortie_lieux').value = lieuId;
+                        //appel de la route ajax créée dans le controller
+                        fetch(`/sortie/lieu/${lieuId}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                //récupération des informations
+                                document.getElementById('lieu-rue').textContent = data.rue;
+                                document.getElementById('lieu-cp').textContent = data.codePostal;
+                            });
+                    } else {
+                        document.getElementById('lieu-rue').textContent = '';
+                        document.getElementById('lieu-cp').textContent = '';
+                    }
+                });
+            </script>
             <br>
             <div class="text-center">
                 <button type="submit" class="btn btn-primary">
@@ -63,11 +120,9 @@
                 <button type="reset" class="btn btn-secondary">
                     Annuler
                 </button>
-
             </div>
             {{ form_end(sortie_form) }}
         </div>
     </div>
-
     <br>
 {% endblock %}

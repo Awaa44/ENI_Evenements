@@ -50,13 +50,22 @@
                 <th scope="row"><a href="#">{{ data.organisateur }}</a></th>
                 <th scope="row">
                     {% if data.etat == 'Ouverte' %}
-                        <a href="#">Se Désister</a>
                         <a href="#">Annuler</a>
+                        <a href="{{ path('app_home_inscrire', { idSortie: data.id}) }}"
+                           onclick="return confirm('Etes vous vraiment sûr de vouloir vous inscrire a cette sortie : {{ data.nom }} ?')">
+                            S'inscrire
+                        </a>
                     {% endif %}
                     {% if data.etat == 'Créée' %}
                         <a href="#">Modifier</a>
                     {% endif %}
-                    <a href="#">Afficher</a>
+                    {% if data.inscrit == 'X' %}
+                        <a href="{{ path('app_home_desister', { idSortie: data.id}) }}"
+                           onclick="return confirm('Etes vous vraiment sûr de vouloir vous désister de la sortie {{ data.nom }} ?')">
+                            Se Désister
+                        </a>
+                    {% endif %}
+                    <a href="{{ path('app_sortie_detail', { id: data.id}) }}">Afficher</a>
                 </th>
             </tr>
         {% endfor %}

@@ -14,7 +14,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * @extends ServiceEntityRepository<Participants>
  */
-class ParticipantRepository extends ServiceEntityRepository implements PasswordUpgraderInterface, UserLoaderInterface
+class ParticipantsRepository extends ServiceEntityRepository implements PasswordUpgraderInterface, UserLoaderInterface
 {
     public function __construct(ManagerRegistry $registry)
     {

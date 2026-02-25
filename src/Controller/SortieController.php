@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Etats;
 use App\Entity\Lieux;
 use App\Entity\Sorties;
 use App\Entity\Villes;
@@ -48,16 +49,23 @@ final class SortieController extends AbstractController
         //$sortie->setOrganisateur($this->getUser());
 
         if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
-            //mettre l'état créée par défaut
-            $etat = $etatsRepository->find(1);
-            $sortie->setEtats($etat);
-            $sortie->setEtatSortie(1);
+            if ($request->request->get('creer')) {
+                //mettre l'état créée par défaut
+                $etat = $etatsRepository->find(1);
+                $sortie->setEtats($etat);
+                $sortie->setEtatSortie(1);
+                $message = 'Votre sortie a été créée';
+            } else {
+                $etat = $etatsRepository->find(2);
+                $sortie->setEtats($etat);
+                $sortie->setEtatSortie(2);
+                $message = 'Votre sortie a été publiée';
+            }
 
             $em->persist($sortie);
             $em->flush();
 
             //message de succès
-            $message = 'Votre sortie a été créée';
             $this->addFlash('success', $message);
             return $this->redirectToRoute('app_sortie_detail', ['id' => $sortie->getId()]);
         }
@@ -65,6 +73,7 @@ final class SortieController extends AbstractController
         return $this->render('sortie/edit.html.twig', [
             'sortie_form' => $sortieForm,
             'sortie' => $sortie,
+            'isEdit' => false,
         ]);
     }
 
@@ -93,6 +102,7 @@ final class SortieController extends AbstractController
         return $this->json($listLieux);
     }
 
+
     #[Route('/update/{id}', name: '_update', requirements: ['id'=> '\d+'])]
     public function updateSortie(Request $request, EntityManagerInterface $em, Sorties $sortie): Response
     {
@@ -112,6 +122,7 @@ final class SortieController extends AbstractController
         return $this->render('sortie/edit.html.twig', [
             'sortie_form' => $sortieForm,
             'sortie' => $sortie,
+            'isEdit' => true,
         ]);
     }
 

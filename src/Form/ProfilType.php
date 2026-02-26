@@ -40,8 +40,8 @@ class ProfilType extends AbstractType
                 'mapped' => false,
                 'required' => false,  // faux car optionnel de changer de mdp  !
                 'invalid_message' => 'Les mots de passe ne correspondent pas.',
-                'first_options' => ['label' => 'Mot de passe'],
-                'second_options' => ['label' => 'Confirmer le mot de passe'],
+                'first_options' => ['label' => 'Nouveau mot de passe'],
+                'second_options' => ['label' => 'Saisissez une seconde fois le nouveau mot de passe :'],
             ])
 //            ->add('nomSite', PasswordType::class, [
 //                'mapped' => false,

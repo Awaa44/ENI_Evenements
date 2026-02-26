@@ -14,12 +14,15 @@
             <p class="card-body pt-0">Nombre de place : {{ sortie.nbInscriptionMax }}</p>
             <p class="card-body pt-0">Durée : {{ sortie.duree }} min</p>
             <p class="card-body pt-0">Description et infos : {{ sortie.infosSortie }}</p>
-            <p class="card-body pt-0">Ville organisatrice : {{ sortie.lieux.villes.nomVille }}</p>
+            <p class="card-body pt-0">Site organisateur : {{ sortie.organisateur.sites.nomSite }}</p>
             <p class="card-body pt-0">Lieu : {{ sortie.lieux.nomLieu }}</p>
             <p class="card-body pt-0">Rue : {{ sortie.lieux.rue }}</p>
             <p class="card-body pt-0">Code postal : {{ sortie.lieux.villes.codePostal }}</p>
+            <p class="card-body pt-0">Ville : {{ sortie.lieux.villes.nomVille }}</p>
             <p class="card-body pt-0">Latitude : {{ sortie.lieux.latitude }}</p>
             <p class="card-body pt-0">Longitude : {{ sortie.lieux.longitude }}</p>
+            <a class="btn btn-warning"
+               href="{{ path('app_sortie_update', {id: sortie.id}) }}" role="button">Modifier</a>
         </div>
     </div>
     <h3>Liste des participants à la sortie</h3>

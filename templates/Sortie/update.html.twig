@@ -1,0 +1,77 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer une sortie | {{ parent() }} {% endblock %}
+
+{% block body %}
+    <h2 class="text-center p-2">Modifier une sortie</h2>
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-6">
+            {{ form_start(sortie_form) }}
+            <div class="group">
+                {{ form_label(sortie_form.nom) }}
+                {{ form_widget(sortie_form.nom) }}
+                {{ form_errors(sortie_form.nom) }}
+            </div>
+            <div class="group">
+                {{ form_label(sortie_form.dateHeureDebut) }}
+                {{ form_widget(sortie_form.dateHeureDebut) }}
+                {{ form_errors(sortie_form.dateHeureDebut) }}
+            </div>
+            <div class="group">
+                {{ form_label(sortie_form.dateLimiteInscription) }}
+                {{ form_widget(sortie_form.dateLimiteInscription) }}
+                {{ form_errors(sortie_form.dateLimiteInscription) }}
+            </div>
+            <div class="group">
+                {{ form_label(sortie_form.duree) }}
+                <div class="input-group">
+                    {{ form_widget(sortie_form.duree, {'attr': {'class': 'form-control'}}) }}
+                    <span class="input-group-text">minutes</span>
+                </div>
+                {{ form_errors(sortie_form.duree) }}
+                <p>minutes</p>
+            </div>
+            <div class="group">
+                {{ form_label(sortie_form.nbInscriptionMax) }}
+                {{ form_widget(sortie_form.nbInscriptionMax) }}
+                {{ form_errors(sortie_form.nbInscriptionMax) }}
+            </div>
+            <div class="group">
+                {{ form_label(sortie_form.infosSortie) }}
+                {{ form_widget(sortie_form.infosSortie) }}
+                {{ form_errors(sortie_form.infosSortie) }}
+            </div>
+            <p class="card-body pt-0">Site organisateur : {{ sortie.organisateur.sites.nomSite }}</p>
+            <div class="group">
+                {{ form_label(sortie_form.villes) }}
+                {{ form_widget(sortie_form.villes) }}
+                {{ form_errors(sortie_form.villes) }}
+            </div>
+            <div class="group">
+                {{ form_label(sortie_form.lieux) }}
+                {{ form_widget(sortie_form.lieux) }}
+                {{ form_errors(sortie_form.lieux) }}
+            </div>
+            <br>
+            <p class="card-body pt-0">Rue : {{ sortie.lieux.rue }}</p>
+            <p class="card-body pt-0">Code postal : {{ sortie.lieux.villes.codePostal }}</p>
+            <br>
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary">
+                    Enregistrer
+                </button>
+                <a class="btn btn-warning"
+                   href="" role="button">
+                    Publier la sortie
+                </a>
+                <button type="reset" class="btn btn-secondary">
+                    Annuler
+                </button>
+
+            </div>
+            {{ form_end(sortie_form, {'render_rest': false}) }}
+        </div>
+    </div>
+
+    <br>
+{% endblock %}

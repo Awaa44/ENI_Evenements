@@ -1,9 +1,37 @@
 {% extends 'base.html.twig' %}
-
+{% block page_js %}
+    <script src="{{ asset('js/home.js') }}"></script>
+{% endblock %}
 {% block title %}Home!{% endblock %}
-
 {% block body %}
-<div class="example-wrapper">
-
-</div>
+<div>
+    <p>Date du jour : {{ "now"|date('d/m/Y') }}</p>
+    <p>Participant : </p>
+    <label for="filtreSite">Site&nbsp;:</label>
+    <select name="" id="filtreSite">
+        <option value="">Choississez un site</option>
+        {% for site in sites %}
+                <option value="{{ site.id }}">{{ site.nomSite }}</option>
+        {% endfor %}
+    </select>
+    <br>
+    <br>
+    <label for="inputSearch">Le nom de la sortie contient&nbsp;:</label>
+    <input type="text" id="inputSearch">
+    <br>
+    <br>
+    <label for="inputDateDebut">Date comprise entre&nbsp;:</label>
+    <input type="date" id="inputDateDebut">
+    <label for="inputDateFin">et</label>
+    <input type="date" id="inputDateFin">
+    <br>
+    <table>
+        <thead>
+            {% include 'home/_thead.html.twig' %}
+        </thead>
+        <tbody id="tabHome">
+            {% include 'home/_tbody.html.twig' %}
+        </tbody>
+    </table>
+</div><br>
 {% endblock %}

@@ -1,24 +1,137 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Créer une sortie | {{ parent() }} {% endblock %}
+
 {% block body %}
+    {% if isEdit %}
+        <h2 class="text-center p-2">Modifier une sortie</h2>
+    {% else %}
+        <h2 class="text-center p-2">Créer une sortie</h2>
+    {% endif %}
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-6">
 
-    <h2 class="text-center p-3">Ajouter une sortie</h2>
+            {{ form_start(sortie_form) }}
+            {{ form_widget(sortie_form.lieux, {'attr': {'class': 'form-select d-none'}}) }}
 
-    <div class="card mt-2 mb-2 w-50 m-auto">
-        <div class="card-body">
-            <h5 class="card-title text-center"></h5>
-            <p class="card-body text-center"></p>
-            <p class="card-body pb-0-1"><strong>Description de la sortie : </strong></p>
-            <p class="card-body pt-0"></p>
+            <div class="group">
+                {{ form_label(sortie_form.nom) }}
+                {{ form_widget(sortie_form.nom) }}
+                {{ form_errors(sortie_form.nom) }}
+            </div>
+            <div class="group">
+                {{ form_label(sortie_form.dateHeureDebut) }}
+                {{ form_widget(sortie_form.dateHeureDebut) }}
+                {{ form_errors(sortie_form.dateHeureDebut) }}
+             </div>
+            <div class="group">
+                {{ form_label(sortie_form.dateLimiteInscription) }}
+                {{ form_widget(sortie_form.dateLimiteInscription) }}
+                {{ form_errors(sortie_form.dateLimiteInscription) }}
+            </div>
+            <div class="group">
+                {{ form_label(sortie_form.duree) }}
+                <div class="input-group">
+                    {{ form_widget(sortie_form.duree, {'attr': {'class': 'form-control'}}) }}
+                    <span class="input-group-text">minutes</span>
+                </div>
+                {{ form_errors(sortie_form.duree) }}
+            </div>
+            <div class="group">
+                {{ form_label(sortie_form.nbInscriptionMax) }}
+                {{ form_widget(sortie_form.nbInscriptionMax) }}
+                {{ form_errors(sortie_form.nbInscriptionMax) }}
+            </div>
+            <div class="group">
+                {{ form_label(sortie_form.infosSortie) }}
+                {{ form_widget(sortie_form.infosSortie) }}
+                {{ form_errors(sortie_form.infosSortie) }}
+            </div>
+            <br>
+            <p class="card-body pt-0">Site organisateur : {{ sortie.organisateur.sites.nomSite }}</p>
+            <div class="group">
+                {{ form_label(sortie_form.villes) }}
+                {{ form_widget(sortie_form.villes) }}
+                {{ form_errors(sortie_form.villes) }}
+            </div>
+            <div class="group">
+                {{ form_label(sortie_form.lieux) }}
+                <div><select class="form-select" id="lieu-select">
+                        <option value="">--Sélectionner un lieu--</option>
+                    </select>
+                </div>
+
+                <script>
+                    document.getElementById('sortie_villes').addEventListener('change', function() {
+                        const villeId = this.value;
+                        if (villeId) {
+                            document.getElementById('lieu-select').innerHTML = '';
+                            const defaultOption = document.createElement('option');
+                            defaultOption.value = '';
+                            defaultOption.textContent = '--Sélectionner un lieu--';
+                            document.getElementById('lieu-select').appendChild(defaultOption);
+                            //appel de la route ajax créée dans le controller
+                            fetch(`/sortie/ville/${villeId}`)
+                                .then(response => response.json())
+                                .then(data => {
+                                    //récupération des informations
+                                    for (const datum of data) {
+                                        const option = document.createElement('option');
+                                        option.value = datum.idLieux;
+                                        option.textContent = datum.nomLieux;
+                                        document.getElementById('lieu-select').appendChild(option);
+                                    }
+                                });
+                        } else {
+                            document.getElementById('lieu-select').innerHTML = '';
+                        }
+                    });
+                </script>
+                {{ form_errors(sortie_form.lieux) }}
+            </div>
+            <br>
+            <p class="card-body pt-0">Rue : <span id="lieu-rue"></span></p>
+            <p class="card-body pt-0">Code postal : <span id="lieu-cp"></span></p>
+            <script>
+                document.getElementById('lieu-select').addEventListener('change', function() {
+                    const lieuId = this.value;
+                    if (lieuId) {
+                        //compléter le champ lieu avec le select-lieu custom
+                        document.getElementById('sortie_lieux').value = lieuId;
+                        //appel de la route ajax créée dans le controller
+                        fetch(`/sortie/lieu/${lieuId}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                //récupération des informations
+                                document.getElementById('lieu-rue').textContent = data.rue;
+                                document.getElementById('lieu-cp').textContent = data.codePostal;
+                            });
+                    } else {
+                        document.getElementById('lieu-rue').textContent = '';
+                        document.getElementById('lieu-cp').textContent = '';
+                    }
+                });
+            </script>
+            <br>
             <div class="text-center">
-                <a class="btn btn-warning"
-                   href="#" role="button">Modifier</a>
-                <a href="#"
+                <button type="submit" class="btn btn-primary" value="creer" name="creer">
+                    Enregistrer
+                </button>
+                <button type="submit" class="btn btn-warning" value="publier" name="publier">
+                    Publier la sortie
+                </button>
+                <button type="reset" class="btn btn-secondary">
+                    Annuler
+                </button>
+                {% if isEdit %}
+                <a href="{{ path('app_sortie_delete', {id: sortie.id, _token: csrf_token('delete' ~ sortie.id)}) }}"
                    class="btn btn-danger"
                    onclick="return confirm('Etes-vous sûr???')"
                 >Supprimer</a>
+                {% endif %}
             </div>
+            {{ form_end(sortie_form) }}
         </div>
     </div>
-
+    <br>
 {% endblock %}

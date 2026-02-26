@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use App\Repository\SortieRepository;
-use App\Repository\VilleRepository;
+use App\Repository\SortiesRepository;
+use App\Repository\VillesRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class SortieController extends AbstractController
 {
     #[Route('/{id}', name: '_detail', requirements: ['id' => '\d+'], methods: ['GET'])]
-    public function index(SortieRepository $sortieRepository, int $id): Response
+    public function index(SortiesRepository $sortieRepository, int $id): Response
     {
         $sortie = $sortieRepository->find($id);
 
@@ -21,6 +21,4 @@ final class SortieController extends AbstractController
             'sortie' => $sortie,
         ]);
     }
-
-
 }

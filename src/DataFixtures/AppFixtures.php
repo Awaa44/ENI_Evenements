@@ -168,6 +168,8 @@ class AppFixtures extends Fixture
                 $inscription->setParticipant($participantsShuffle[$i]);
                 $inscription->setSortie($sortie);
                 $inscription->setDateInscription(new \DateTime());
+                // ✅ Génération aléatoire du boolean isInscrit
+                $inscription->setIsInscrit((bool) random_int(0, 1));
 
                 $manager->persist($inscription);
             }

@@ -1,9 +1,9 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Mon profil{% endblock %}
+{% block title %}Page de {{ participant.pseudo }}{% endblock %}
 
 {% block body %}
-    <h1>{{ participant.pseudo }} </h1>
+    <h1>Page de {{ participant.pseudo }} </h1>
 
     <p>Prénom : {{ participant.prenom }}</p>
     <p>Nom : {{ participant.nom }}</p>

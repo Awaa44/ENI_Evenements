@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Participants;
 use App\Form\ProfilType;
 use App\Form\RegistrationType;
+use App\Repository\ParticipantsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -99,10 +100,13 @@ final class UserController extends AbstractController
     }
 
     #[Route('/profile/{id}', name: 'app_profile_show')]
-    public function showProfile(Participants $participant): Response
+    public function showProfile(int $id, ParticipantsRepository $participantsRepository): Response
     {
+        $participant = $participantsRepository->find($id);
+
         return $this->render('profile/show.html.twig', [
             'participant' => $participant,
+
         ]);
     }
 }

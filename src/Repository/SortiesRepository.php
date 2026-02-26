@@ -27,6 +27,7 @@ class SortiesRepository extends ServiceEntityRepository
                 'etats.libelle AS etat',
                 'sites.nomSite AS site',
                 'organisateurParticipant.nom AS organisateur',
+                'organisateurParticipant.id AS idOrganisateur',
                 'SUM(CASE WHEN inscriptions.isInscrit = true THEN 1 ELSE 0 END) AS nbInscrits',
                 "CASE WHEN inscriptionParticipant.isInscrit = true THEN 'X' ELSE '' END AS inscrit"
             )

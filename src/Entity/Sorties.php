@@ -5,7 +5,9 @@ namespace App\Entity;
 use App\Repository\SortiesRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: SortiesRepository::class)]
 class Sorties
@@ -16,15 +18,23 @@ class Sorties
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message:'La sortie doit avoir un nom')]
+    #[Assert\Length(min:3, max: 255, minMessage: 'La sortie doit avoir au minimum {{ limit }} caractères',
+    maxMessage: 'Le nom de la sortie ne peux pas excéder {{ limit }} caractères')]
     private ?string $nom = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank(message:'La sortie doit avoir une date de début')]
+    #[Assert\GreaterThan(propertyPath: 'dateLimiteInscription',
+        message: 'La date doit être supérieure à {{ compared_value }}')]
     private ?\DateTime $dateHeureDebut = null;
 
     #[ORM\Column(nullable: true)]
     private ?int $duree = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank(message:'La sortie doit avoir une date limite d\'inscription')]
+    #[Assert\LessThan('-5 days', message:'La date de sortie doit être antérieure à {{ compared_value }} la date limite de sortie')]
     private ?\DateTime $dateLimiteInscription = null;
 
     #[ORM\Column]
@@ -84,7 +94,7 @@ class Sorties
         return $this->dateHeureDebut;
     }
 
-    public function setDateHeureDebut(\DateTime $dateHeureDebut): static
+    public function setDateHeureDebut(?\DateTime $dateHeureDebut): static
     {
         $this->dateHeureDebut = $dateHeureDebut;
 
@@ -108,7 +118,7 @@ class Sorties
         return $this->dateLimiteInscription;
     }
 
-    public function setDateLimiteInscription(\DateTime $dateLimiteInscription): static
+    public function setDateLimiteInscription(?\DateTime $dateLimiteInscription): static
     {
         $this->dateLimiteInscription = $dateLimiteInscription;
 

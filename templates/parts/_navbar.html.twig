@@ -26,7 +26,7 @@
                 </li>
                 {#{% if is_granted('IS_AUTHENTICATED') %}#}
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Ajouter une sortie</a>
+                        <a class="nav-link" href="{{ path('app_sortie_create') }}">Ajouter une sortie</a>
                     </li>
                     {% if is_granted('ROLE_ADMIN') %}
                         <li class="nav-item">

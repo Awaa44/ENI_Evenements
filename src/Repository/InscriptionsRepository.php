@@ -20,16 +20,28 @@ class InscriptionsRepository extends ServiceEntityRepository
         parent::__construct($registry, Inscriptions::class);
     }
 
-    public function updateInscription($idSortie): int
+    public function updateInscription($idSortie,bool $isInscrire): int
     {
         return $this->createQueryBuilder('inscriptions')
             ->update()
             ->set('inscriptions.isInscrit', ':value')
             ->where('inscriptions.sortie = :idSortie')
-            ->setParameter('value', false)
+            ->setParameter('value', $isInscrire)
             ->setParameter('idSortie', $idSortie)
             ->getQuery()
             ->execute();
+    }
+
+    public function existsByParticipantAndSortie(int $participantId, int $sortieId): bool
+    {
+        $qb = $this->createQueryBuilder('i')
+            ->select('COUNT(i.id)')
+            ->where('i.participant = :participant')
+            ->andWhere('i.sortie = :sortie')
+            ->setParameter('participant', $participantId)
+            ->setParameter('sortie', $sortieId);
+
+        return (int) $qb->getQuery()->getSingleScalarResult() > 0;
     }
 //    /**
 //     * @return Inscriptions[] Returns an array of Inscriptions objects

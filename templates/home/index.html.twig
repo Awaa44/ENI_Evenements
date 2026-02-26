@@ -1,12 +1,15 @@
 {% extends 'base.html.twig' %}
-
+{% block page_js %}
+    <script src="{{ asset('js/home.js') }}"></script>
+{% endblock %}
 {% block title %}Home!{% endblock %}
 {% block body %}
-<div class="example-wrapper">
+<div>
     <p>Date du jour : {{ "now"|date('d/m/Y') }}</p>
     <p>Participant : </p>
-    <label for="lieux-select">Site&nbsp;:</label>
-    <select name="" id="lieux-select">
+    <label for="filtreSite">Site&nbsp;:</label>
+    <select name="" id="filtreSite">
+        <option value="">Choississez un site</option>
         {% for site in sites %}
                 <option value="{{ site.id }}">{{ site.nomSite }}</option>
         {% endfor %}
@@ -23,59 +26,12 @@
     <input type="date" id="inputDateFin">
     <br>
     <table>
-        <caption>
-            Sorties
-        </caption>
         <thead>
-        <tr>
-            <th scope="col">Nom de la sortie</th>
-            <th scope="col">Date de la sortie</th>
-            <th scope="col">Clôture</th>
-            <th scope="col">Inscrits/Places</th>
-            <th scope="col">Etat</th>
-            <th scope="col">Inscrit</th>
-            <th scope="col">Organisateur</th>
-            <th scope="col">Actions</th>
-        </tr>
+            {% include 'home/_thead.html.twig' %}
         </thead>
-        <tbody>
-        {% for data in tableau %}
-            <tr>
-                <th scope="row">{{ data.nom }}</th>
-                <th scope="row">{{ data.dateHeureDebut|date('d/m/Y H:i')}}</th>
-                <th scope="row">{{ data.dateLimiteInscription|date('d/m/Y')}}</th>
-                <th scope="row">{{ data.nbInscrits~'/'~data.nbInscriptionMax }}</th>
-                <th scope="row">{{ data.etat }}</th>
-                <th scope="row">{{ data.inscrit }}</th>
-                <th scope="row"><a href="#">{{ data.organisateur }}</a></th>
-                <th scope="row">
-                    {% if data.etat == 'Ouverte' %}
-                        <a href="#">Annuler</a>
-                        <a href="{{ path('app_home_inscrire', { idSortie: data.id}) }}"
-                           onclick="return confirm('Etes vous vraiment sûr de vouloir vous inscrire a cette sortie : {{ data.nom }} ?')">
-                            S'inscrire
-                        </a>
-                    {% endif %}
-                    {% if data.etat == 'Créée' %}
-                        <a href="#">Modifier</a>
-                    {% endif %}
-                    {% if data.inscrit == 'X' %}
-                        <a href="{{ path('app_home_desister', { idSortie: data.id}) }}"
-                           onclick="return confirm('Etes vous vraiment sûr de vouloir vous désister de la sortie {{ data.nom }} ?')">
-                            Se Désister
-                        </a>
-                    {% endif %}
-                    <a href="{{ path('app_sortie_detail', { id: data.id}) }}">Afficher</a>
-                </th>
-            </tr>
-        {% endfor %}
+        <tbody id="tabHome">
+            {% include 'home/_tbody.html.twig' %}
         </tbody>
-{#        <tfoot>#}
-{#        <tr>#}
-{#            <th scope="row" colspan="2">Âge moyen</th>#}
-{#            <td>33</td>#}
-{#        </tr>#}
-{#        </tfoot>#}
     </table>
-</div>
+</div><br>
 {% endblock %}

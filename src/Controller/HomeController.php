@@ -15,6 +15,7 @@ use Doctrine\ORM\OptimisticLockException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Attribute\Route;
 #[Route('/home', name: 'app_home')]
 final class HomeController extends AbstractController
@@ -27,9 +28,10 @@ final class HomeController extends AbstractController
 
         //Tableau
         $tableau = $sortieRepository->getSortiesHome(2);
+        //dd($tableau);
 
         // Mise en session  de la requete
-//        $request->getSession()->set('tableau', $tableau);
+        $request->getSession()->set('tableau', $tableau);
 
         return $this->render('home/index.html.twig', [
 //            'controller_name' => 'HomeController',
@@ -45,7 +47,7 @@ final class HomeController extends AbstractController
         int $idSortie
     ): Response
     {
-        $result = $inscriptionsRepository->updateInscription($idSortie);
+        $result = $inscriptionsRepository->updateInscription($idSortie,false);
         $sortie = $em->find(Sorties::class, $idSortie);
         if (!$sortie)  {
             throw new \Exception("Sortie introuvable");
@@ -72,28 +74,50 @@ final class HomeController extends AbstractController
 //        {
 //            $idUser = $user->getId();
 //        }
-        $idUser = 2;
+        $idParticipant = 2;
 
         // Récupération des entités liées
         $sortie = $em->find(Sorties::class, $idSortie);
-        $participant = $em->find(Participants::class, $idUser);
+        $participant = $em->find(Participants::class, $idParticipant);
 
         if (!$sortie || !$participant) {
             throw new \Exception("Sortie ou participant introuvable");
         }
-
-        // Création de l’inscription
-        $inscription = new Inscriptions();
-        $inscription->setDateInscription(new \DateTime());
-        $inscription->setIsInscrit(true);
-
-        $inscription->setSortie($sortie);
-        $inscription->setParticipant($participant);
-
-        $em->persist($inscription);
-        $em->flush();
+        $existe = $inscriptionsRepository->existsByParticipantAndSortie($idParticipant, $idSortie);
+        if ($existe) {
+            $inscriptionsRepository->updateInscription($idSortie,true);
+        } else {
+            // Création de l’inscription
+            $inscription = new Inscriptions();
+            $inscription->setDateInscription(new \DateTime());
+            $inscription->setIsInscrit(true);
+            $inscription->setSortie($sortie);
+            $inscription->setParticipant($participant);
+            $em->persist($inscription);
+            $em->flush();
+        }
         $this->addFlash('success', 'Vous êtes inscrit à la sortie ' . $sortie->getNom());
 
         return $this->redirectToRoute('app_home_index');
+    }
+
+    #[Route('/filtrer', name: 'filtrer')]
+    public function filtrer(Request $request, SortiesRepository $sortiesRepository): Response
+    {
+        $participantId = 2; // ⚠️ utilisateur connecté
+
+        $filters = [
+            'siteId'     => $request->query->get('idSite'),
+            'nomSortie'  => $request->query->get('nomSortie'),
+//            'dateDebut'  => $request->query->get('dateDebut'),
+//            'dateFin'    => $request->query->get('dateFin'),
+//            'etat'       => $request->query->get('etat'),
+        ];
+        $tableau = $sortiesRepository->getSortiesHome($participantId, $filters);
+        //dd($tableau);
+
+        return $this->render('home/_tbody.html.twig', [
+            'tableau' => $tableau
+        ]);
     }
 }

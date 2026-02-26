@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon profil{% endblock %}
+
+{% block body %}
+    <h1>{{ participant.pseudo }} </h1>
+
+    <p>Prénom : {{ participant.prenom }}</p>
+    <p>Nom : {{ participant.nom }}</p>
+    <p>Téléphone : {{ participant.telephone }}</p>
+    <p>Email : {{ participant.email }}</p>
+    <p>Ville de rattachement : {{ participant.sites.nomSite }}</p>
+
+
+    <a href="{{ path('app_home_index') }}" class="btn btn-secondary">Retour</a>
+
+{% endblock %}

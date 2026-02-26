@@ -70,11 +70,7 @@ final class UserController extends AbstractController
             return $this->redirectToRoute('app_profile');
         }
 
-//        if ($form->isSubmitted() && !$form->isValid()) {
-//            dd($form->getErrors(true, false));
-//        }
-
-        return $this->render('profile/profile.html.twig', [
+        return $this->render('profile/myprofile.html.twig', [
             'profilForm' => $form->createView(),
         ]);
 
@@ -102,4 +98,11 @@ final class UserController extends AbstractController
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
 
+    #[Route('/profile/{id}', name: 'app_profile_show')]
+    public function showProfile(Participants $participant): Response
+    {
+        return $this->render('profile/show.html.twig', [
+            'participant' => $participant,
+        ]);
+    }
 }

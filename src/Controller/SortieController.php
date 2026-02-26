@@ -153,7 +153,7 @@ final class SortieController extends AbstractController
 
                 $message = 'Votre sortie a été supprimée';
                 $this->addFlash('success', $message);
-                return $this->redirectToRoute('app_home');
+                return $this->redirectToRoute('app_home_index');
             } else {
                 $message = 'Impossible de supprimer une sortie avec ce statut';
                 $this->addFlash('danger', $message);

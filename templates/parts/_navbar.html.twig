@@ -24,33 +24,23 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#">#</a>
                 </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Ajouter une sortie</a>
-                </li>
-                {% if is_granted('ROLE_ADMIN') %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">#</a>
-                    </li>
-                {% endif %}
                 {# si on a un utilisateur connecté... #}
                 {% if app.user %}
                 {#{% if is_granted('IS_AUTHENTICATED') %}#}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('app_sortie_create') }}">Ajouter une sortie</a>
                     </li>
-                    {% if is_granted('ROLE_ADMIN') %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">#</a>
-                        </li>
-                   {# {% endif %}#}
+{#                    {% if is_granted('ROLE_ADMIN') %}#}
+{#                        <li class="nav-item">#}
+{#                            <a class="nav-link" href="#">#</a>#}
+{#                        </li>#}
+{#                   {% endif %}#}
                     <li class="nav-item">
                         <a class="nav-link" aria-disabled="true">"Bonjour {{ app.user.pseudo }}"</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('app_profile') }}">Mon profil</a>
                     </li>
-                {% else %}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a>
                     </li>

@@ -25,16 +25,20 @@ final class HomeController extends AbstractController
     {
         //Liste des sites
         $sites = $sitesRepository->findAll();
-
+        $user = $this->getUser();
+        if (!$user)
+        {
+            throw new \Exception("Utilisateur introuvable");
+        }
+        $idParticipant = $user->getId();
         //Tableau
-        $tableau = $sortieRepository->getSortiesHome(2);
-        //dd($tableau);
+        $tableau = $sortieRepository->getSortiesHome($idParticipant);
+        dd($tableau);
 
         // Mise en session  de la requete
-        $request->getSession()->set('tableau', $tableau);
+//        $request->getSession()->set('tableau', $tableau);
 
         return $this->render('home/index.html.twig', [
-//            'controller_name' => 'HomeController',
             'sites' => $sites,
             'tableau' => $tableau,
         ]);
@@ -69,12 +73,12 @@ final class HomeController extends AbstractController
     ): Response
     {
         //Mettre récupération idUser connecté
-//        $user = $this->getUser();
-//        if ($user)
-//        {
-//            $idUser = $user->getId();
-//        }
-        $idParticipant = 2;
+        $user = $this->getUser();
+        if (!$user)
+        {
+            throw new \Exception("Utilisateur introuvable");
+        }
+        $idParticipant = $user->getId();
 
         // Récupération des entités liées
         $sortie = $em->find(Sorties::class, $idSortie);
@@ -104,16 +108,24 @@ final class HomeController extends AbstractController
     #[Route('/filtrer', name: 'filtrer')]
     public function filtrer(Request $request, SortiesRepository $sortiesRepository): Response
     {
-        $participantId = 2; // ⚠️ utilisateur connecté
+        $user = $this->getUser();
+        if (!$user)
+        {
+            throw new \Exception("Utilisateur introuvable");
+        }
+        $idParticipant = $user->getId();
 
-        $filters = [
+        $filtres = [
             'siteId'     => $request->query->get('idSite'),
             'nomSortie'  => $request->query->get('nomSortie'),
-//            'dateDebut'  => $request->query->get('dateDebut'),
-//            'dateFin'    => $request->query->get('dateFin'),
-//            'etat'       => $request->query->get('etat'),
+            'dateDebut'  => $request->query->get('dateDebut'),
+            'dateFin'    => $request->query->get('dateFin'),
+            'organisateur'   => $request->query->get('organisateur'),
+            'inscrit'   => $request->query->get('inscrit'),
+            'nonInscrit'   => $request->query->get('nonInscrit'),
+            'passees'   => $request->query->get('passees'),
         ];
-        $tableau = $sortiesRepository->getSortiesHome($participantId, $filters);
+        $tableau = $sortiesRepository->getSortiesHome($idParticipant, $filtres);
         //dd($tableau);
 
         return $this->render('home/_tbody.html.twig', [

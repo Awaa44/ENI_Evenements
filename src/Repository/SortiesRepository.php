@@ -66,20 +66,32 @@ class SortiesRepository extends ServiceEntityRepository
                 ->setParameter('nomSortie', '%' . $filtres['nomSortie'] . '%');
         }
 
-//        if (!empty($filtres['dateDebut'])) {
-//            $query->andWhere('sorties.dateHeureDebut >= :dateDebut')
-//                ->setParameter('dateDebut', new \DateTime($filters['dateDebut']));
-//        }
-//
-//        if (!empty($filtres['dateFin'])) {
-//            $query->andWhere('sorties.dateHeureDebut <= :dateFin')
-//                ->setParameter('dateFin', new \DateTime($filters['dateFin']));
-//        }
-//
-//        if (!empty($filtres['etat'])) {
-//            $query->andWhere('etats.libelle = :etat')
-//                ->setParameter('etat', $filters['etat']);
-//        }
+        if (!empty($filtres['dateDebut']) && !empty($filtres['dateFin'])) {
+
+            $dateDebut = new \DateTime($filtres['dateDebut']);
+            $dateFin = new \DateTime($filtres['dateFin']);
+
+            // Très important : inclure toute la journée de fin
+            $dateFin->setTime(23, 59, 59);
+
+            $query->andWhere('sorties.dateHeureDebut BETWEEN :dateDebut AND :dateFin')
+                ->setParameter('dateDebut', $dateDebut)
+                ->setParameter('dateFin', $dateFin);
+        }
+        if (!empty($filtres['organisateur'])) {
+            $query->andWhere('organisateurParticipant.id = :participantId');
+        }
+        if (!empty($filtres['inscrit'])) {
+            $query->andWhere('inscriptionParticipant.isInscrit = true');
+        }
+        if (!empty($filtres['nonInscrit'])) {
+            $query->andWhere('inscriptionParticipant.id IS NULL OR inscriptionParticipant.isInscrit = false');
+        }
+        if (!empty($filtres['passees'])) {
+            $query->andWhere('sorties.dateHeureDebut < :now')
+                ->setParameter('now', new \DateTime());
+        }
+
             return $query->getQuery()->getArrayResult();
     }
 

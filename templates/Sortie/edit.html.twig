@@ -12,6 +12,7 @@
         <div class="col-12 col-md-6">
 
             {{ form_start(sortie_form) }}
+            {{ form_errors(sortie_form) }}
             {{ form_widget(sortie_form.lieux, {'attr': {'class': 'form-select d-none'}}) }}
 
             <div class="group">

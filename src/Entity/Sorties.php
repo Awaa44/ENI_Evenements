@@ -9,6 +9,14 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
+#[Assert\Expression("
+this.getDateLimiteInscription()
+and this.getDateHeureDebut()
+and this.getDateLimiteInscription() <= this.getDateHeureDebutInfCinqJours()",
+    message:'La date limite d\'inscription doit être inférieure de 5 jours à la date de sortie')]
+#[Assert\Expression(
+    "this.getLieux()", message: 'Un lieu de sortie doit être sélectionné'
+)]
 #[ORM\Entity(repositoryClass: SortiesRepository::class)]
 class Sorties
 {
@@ -25,22 +33,30 @@ class Sorties
 
     #[ORM\Column]
     #[Assert\NotBlank(message:'La sortie doit avoir une date de début')]
-    #[Assert\GreaterThan(propertyPath: 'dateLimiteInscription',
-        message: 'La date doit être supérieure à {{ compared_value }}')]
+    #[Assert\GreaterThan(
+        value: new \DateTime('+5 days'),
+        message: 'La date de sortie doit être supérieure de 5 jours à la date du jour'
+    )]
     private ?\DateTime $dateHeureDebut = null;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\NotBlank(message:'La sortie doit avoir une durée')]
     private ?int $duree = null;
 
     #[ORM\Column]
     #[Assert\NotBlank(message:'La sortie doit avoir une date limite d\'inscription')]
-    #[Assert\LessThan('-5 days', message:'La date de sortie doit être antérieure à {{ compared_value }} la date limite de sortie')]
+    #[Assert\GreaterThanOrEqual(
+        value: new \DateTime('now'),
+        message: 'La date limite doit être supérieure à la date du jour'
+    )]
     private ?\DateTime $dateLimiteInscription = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank(message:'La sortie doit avoir un nombre max d\'inscription')]
     private ?int $nbInscriptionMax = null;
 
     #[ORM\Column(length: 500, nullable: true)]
+    #[Assert\NotBlank(message:'La sortie doit avoir une description')]
     private ?string $infosSortie = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -237,5 +253,14 @@ class Sorties
         $this->lieux = $lieux;
 
         return $this;
+    }
+
+    public function getDateHeureDebutInfCinqJours(): ?\DateTime
+    {
+        if($this->dateHeureDebut === null) {
+            return null;
+        }
+        $date = clone $this->dateHeureDebut;
+        return $date->modify('-5 days');
     }
 }

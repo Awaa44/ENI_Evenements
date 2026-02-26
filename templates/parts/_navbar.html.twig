@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-custom pt-1 pb-2 mb-2">
     <div class="container">
         <!-- Logo -->
-        <a class="navbar-brand fs-3" href="#">
+        <a class="navbar-brand fs-3" href="{{ path('app_home_index') }}">
             <img src="{{ asset('images/logo.jpeg') }}" width="60" height="60" class="d-inline-block align-center" alt="Logo">
             Sortir.com
         </a>
@@ -16,7 +16,7 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a class="nav-link active" href="{{ path('app_home') }}">Accueil</a>
+                    <a class="nav-link active" href="{{ path('app_home_index') }}">Accueil</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">#</a>

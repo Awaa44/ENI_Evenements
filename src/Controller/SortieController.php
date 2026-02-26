@@ -104,17 +104,29 @@ final class SortieController extends AbstractController
 
 
     #[Route('/update/{id}', name: '_update', requirements: ['id'=> '\d+'])]
-    public function updateSortie(Request $request, EntityManagerInterface $em, Sorties $sortie): Response
+    public function updateSortie(Request $request, EntityManagerInterface $em, Sorties $sortie,
+                                 EtatsRepository $etatsRepository): Response
     {
         $sortieForm = $this->createForm(SortieType::class, $sortie);
         $sortieForm->handleRequest($request);
 
         if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
+            if ($request->request->get('creer')) {
+                //enregistrer avec l'état 'créée'
+                $etat = $etatsRepository->find(1);
+                $sortie->setEtats($etat);
+                $sortie->setEtatSortie(1);
+                $message = 'Votre sortie a été mise à jour';
+            } else {
+                $etat = $etatsRepository->find(2);
+                $sortie->setEtats($etat);
+                $sortie->setEtatSortie(2);
+                $message = 'Votre sortie a été publiée';
+            }
 
             $em->flush();
 
             //message de succès
-            $message = 'Votre sortie a été mise à jour';
             $this->addFlash('success', $message);
             return $this->redirectToRoute('app_sortie_detail', ['id' => $sortie->getId()]);
         }
@@ -124,6 +136,35 @@ final class SortieController extends AbstractController
             'sortie' => $sortie,
             'isEdit' => true,
         ]);
+    }
+
+    #[Route('/delete/{id}', name: '_delete', requirements: ['id'=> '\d+'])]
+    public function deleteSortie(Request $request, EntityManagerInterface $em, Sorties $sortie): Response {
+
+        //récupération du totem de sécurité
+        $token = $request->query->get('_token');
+
+        if($this->isCsrfTokenValid('delete'.$sortie->getId(), $token) /*&&
+            ($this->getUser() === $sortie->getOrganisateur()->getId() || $this->isGranted('ROLE_ADMIN'))*/){
+
+            if($sortie->getEtats()->getId() === 1){
+                $em->remove($sortie);
+                $em->flush();
+
+                $message = 'Votre sortie a été supprimée';
+                $this->addFlash('success', $message);
+                return $this->redirectToRoute('app_home');
+            } else {
+                $message = 'Impossible de supprimer une sortie avec ce statut';
+                $this->addFlash('danger', $message);
+                return $this->redirectToRoute('app_sortie_detail', ['id' => $sortie->getId()]);
+            }
+
+        }
+
+        $message = 'Impossible de supprimer votre sortie';
+        $this->addFlash('danger', $message);
+        return $this->redirectToRoute('app_sortie_detail', ['id' => $sortie->getId()]);
     }
 
 

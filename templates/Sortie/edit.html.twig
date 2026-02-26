@@ -114,15 +114,21 @@
             </script>
             <br>
             <div class="text-center">
-                <button type="submit" class="btn btn-primary" name="creer">
+                <button type="submit" class="btn btn-primary" value="creer" name="creer">
                     Enregistrer
                 </button>
-                <button type="submit" class="btn btn-warning" name="publier">
+                <button type="submit" class="btn btn-warning" value="publier" name="publier">
                     Publier la sortie
                 </button>
                 <button type="reset" class="btn btn-secondary">
                     Annuler
                 </button>
+                {% if isEdit %}
+                <a href="{{ path('app_sortie_delete', {id: sortie.id, _token: csrf_token('delete' ~ sortie.id)}) }}"
+                   class="btn btn-danger"
+                   onclick="return confirm('Etes-vous sûr???')"
+                >Supprimer</a>
+                {% endif %}
             </div>
             {{ form_end(sortie_form) }}
         </div>

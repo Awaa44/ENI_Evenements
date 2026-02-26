@@ -9,12 +9,12 @@
                 class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
         {% endif %}
 
-        {% if app.user %}
-            <div class="mb-3">
-                Vous êtes connectée en tant que{{ app.user.userIdentifier }}, <a
-                    href="{{ logout_path() }}">Deconnexion</a>
-            </div>
-        {% endif %}
+{#        {% if app.user %}#}
+{#            <div class="mb-3">#}
+{#                Vous êtes connectée en tant que{{ app.user.userIdentifier }}, <a#}
+{#                    href="{{ logout_path() }}">Deconnexion</a>#}
+{#            </div>#}
+{#        {% endif %}#}
 
         <h1 class="h3 mb-3 font-weight-normal">Veuillez vous connectez</h1>
         <label for="username">Email ou pseudo</label>

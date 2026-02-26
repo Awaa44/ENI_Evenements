@@ -3,8 +3,8 @@
 namespace App\Controller;
 
 use App\Repository\LieuxRepository;
-use App\Repository\SiteRepository;
-use App\Repository\SortieRepository;
+use App\Repository\SitesRepository;
+use App\Repository\SortiesRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class HomeController extends AbstractController
 {
     #[Route('/home', name: 'app_home')]
-    public function index(SiteRepository $sitesRepository,SortieRepository $sortieRepository): Response
+    public function index(SitesRepository $sitesRepository, SortiesRepository $sortieRepository): Response
     {
         $sites = $sitesRepository->findAll();
         $tableau = $sortieRepository->getSortiesHome(2);

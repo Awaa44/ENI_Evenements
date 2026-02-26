@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon profil{% endblock %}
+
+{% block body %}
+    <h1>Mon profil</h1>
+
+    {{ form_start(profilForm) }}
+    {% for error in profilForm.vars.errors %}
+        <div class="alert alert-danger">{{ error.message }}</div>
+    {% endfor %}
+
+
+    {{ form_errors(profilForm) }}
+
+    {{ form_row(profilForm.pseudo) }}
+    {{ form_row(profilForm.nom) }}
+    {{ form_row(profilForm.prenom) }}
+    {{ form_row(profilForm.telephone) }}
+    {{ form_row(profilForm.email) }}
+
+    {{ form_row(profilForm.plainPassword) }}
+
+    {#    {{ form_row(profilForm.villederattachement) }} #}
+    {#    {{ form_row(profilForm.photoprofil) }} #}
+
+    <a href="{{ path('app_home') }}" class="btn btn-secondary">Annuler</a>
+    <button type="submit" class="btn btn-primary">Enregistrer</button>
+    {{ form_end(profilForm) }}
+{% endblock %}

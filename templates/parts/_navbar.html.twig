@@ -2,7 +2,8 @@
     <div class="container">
         <!-- Logo -->
         <a class="navbar-brand fs-3" href="#">
-            <img src="{{ asset('images/logo.jpeg') }}" width="60" height="60" class="d-inline-block align-center" alt="Logo">
+            <img src="{{ asset('images/logo.jpeg') }}" width="60" height="60" class="d-inline-block align-center"
+                 alt="Logo">
             Sortir.com
         </a>
 
@@ -24,29 +25,36 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#">#</a>
                 </li>
-                {#{% if is_granted('IS_AUTHENTICATED') %}#}
+
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Ajouter une sortie</a>
+                </li>
+                {% if is_granted('ROLE_ADMIN') %}
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Ajouter une sortie</a>
+                        <a class="nav-link" href="#">#</a>
                     </li>
-                    {% if is_granted('ROLE_ADMIN') %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">#</a>
-                        </li>
-                   {# {% endif %}#}
+                {% endif %}
+                {# si on a un utilisateur connecté... #}
+                {% if app.user %}
                     <li class="nav-item">
                         <a class="nav-link" aria-disabled="true">"Bonjour {{ app.user.pseudo }}"</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path('app_logout') }}">Deconnexion</a>
+                        <a class="nav-link" href="{{ path('app_profile') }}">Mon profil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a>
                     </li>
                 {% else %}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('app_login') }}">Connexion</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ path('app_register') }}">S'enregistrer</a>
-                    </li>
                 {% endif %}
+{#                {% if is_granted("ROLE_ADMIN") %}#}
+{#                    <li class="nav-item">#}
+{#                        <a class="nav-link" href="{{ path('admin_gestion') }}">Gestion admin</a>#}
+{#                    </li>#}
+{#                {% endif %}#}
             </ul>
         </div>
     </div>

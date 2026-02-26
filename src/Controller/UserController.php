@@ -80,7 +80,7 @@ final class UserController extends AbstractController
 
     }
 
-    #[Route('/login', name: 'app_login')]
+    #[Route('/', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
          if ($this->getUser()) {

@@ -6,7 +6,7 @@
 {% block body %}
 <div>
     <p>Date du jour : {{ "now"|date('d/m/Y') }}</p>
-    <p>Participant : </p>
+    <p>Participant : {{  app.user.prenom }} {{ app.user.nom|slice(0, 1) }}.</p>
     <label for="filtreSite">Site&nbsp;:</label>
     <select name="" id="filtreSite">
         <option value="">Choississez un site</option>
@@ -24,6 +24,29 @@
     <input type="date" id="inputDateDebut">
     <label for="inputDateFin">et</label>
     <input type="date" id="inputDateFin">
+    <br>
+    <br>
+    <div>
+        <label>
+            <input type="checkbox" id="filtreOrganisateur" name="organisateur">
+            <span> Sorties dont je suis l'organisateur/trice</span>
+        </label><br>
+
+        <label>
+            <input type="checkbox" id="filtreInscrit" name="inscrit">
+            <span> Sorties auxquelles je suis inscrit/e</span>
+        </label><br>
+
+        <label>
+            <input type="checkbox" id="filtreNonInscrit" name="nonInscrit">
+            <span> Sorties auxquelles je ne suis pas inscrit/e</span>
+        </label><br>
+
+        <label>
+            <input type="checkbox" id="filtrePassees" name="passees">
+            <span> Sorties passées</span>
+        </label><br>
+    </div>
     <br>
     <table>
         <thead>

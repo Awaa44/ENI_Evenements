@@ -1,29 +1,38 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Inscription d'une personne{% endblock %}
+{% block title %}Créer un utilisateur{% endblock %}
 
 {% block body %}
-    <h1>Créer un utilisateur</h1>
+    <div class="container mt-4 mb-5 pb-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white text-center">
+                        <h2>Créer un utilisateur</h2>
+                    </div>
+                    <div class="card-body">
 
-    {{ form_start(registrationForm, {'attr': {'novalidate': 'novalidate', 'data-turbo': 'false'}}) }}
+                        {{ form_start(registrationForm, {'attr': {'novalidate': 'novalidate', 'data-turbo': 'false'}}) }}
 
-    {{ form_row(registrationForm.email) }}
-    {{ form_row(registrationForm.pseudo) }}
+                        {{ form_row(registrationForm.email) }}
+                        {{ form_row(registrationForm.pseudo) }}
+                        {{ form_row(registrationForm.nom) }}
+                        {{ form_row(registrationForm.prenom) }}
+                        {{ form_row(registrationForm.plainPassword, { label: 'Mot de passe' }) }}
+                        {{ form_row(registrationForm.telephone) }}
+                        {{ form_row(registrationForm.sites) }}
+                        {{ form_row(registrationForm.administrateur) }}
 
-    {{ form_row(registrationForm.nom) }}
-    {{ form_row(registrationForm.prenom) }}
+                        <div class="d-flex justify-content-center gap-3 mt-3">
+                            <a href="{{ path('app_home_index') }}" class="btn btn-secondary">Annuler</a>
+                            <a href="{{ path('app_admin') }}" class="btn btn-light">Créer un nouvel utilisateur</a>
+                            <button type="submit" class="btn btn-primary">Inscrire un utilisateur</button>
+                        </div>
 
-    {{ form_row(registrationForm.plainPassword, {
-        label: 'Mot de passe'
-    }) }}
-
-    {{ form_row(registrationForm.telephone) }}
-    {{ form_row(registrationForm.sites) }}
-    {{ form_row(registrationForm.administrateur) }}
-
-    <a href="{{ path('app_home_index') }}" class="btn btn-secondary">Annuler</a>
-    <button type="submit" class="btn btn-primary">Inscrire un utilisateur</button>
-    <a href="{{ path('app_admin') }}" class="btn btn-light">Créer un nouvel utilisateur</a>
-
-    {{ form_end(registrationForm) }}
+                        {{ form_end(registrationForm) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

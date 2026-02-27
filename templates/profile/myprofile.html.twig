@@ -3,31 +3,53 @@
 {% block title %}Mon profil{% endblock %}
 
 {% block body %}
-    <h1>Mon profil</h1>
+    <div class="container mt-4 mt-5 pb-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white text-center">
+                        <h2>Mon profil</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-center mb-3">
+                            {% if app.user.photo %}
+                                <img src="{{ asset('uploads/photos/' ~ app.user.photo) }}"
+                                     alt="Photo de profil"
+                                     class="rounded-circle"
+                                     style="width: 150px; height: 150px; object-fit: cover;">
+                            {% else %}
+                                <img src="{{ asset('images/default-avatar.png') }}"
+                                     alt="Photo par défaut"
+                                     class="rounded-circle"
+                                     style="width: 150px; height: 150px; object-fit: cover;">
+                            {% endif %}
+                        </div>
 
-    {{ form_start(profilForm, {'attr': {'novalidate': 'novalidate', 'data-turbo': 'false', 'enctype': 'multipart/form-data'}}) }}
-    {% for error in profilForm.vars.errors %}
-        <div class="alert alert-danger">{{ error.message }}</div>
-    {% endfor %}
+                        {{ form_start(profilForm, {'attr': {'novalidate': 'novalidate', 'data-turbo': 'false', 'enctype': 'multipart/form-data'}}) }}
 
-    {{ form_errors(profilForm) }}
+                        {% for error in profilForm.vars.errors %}
+                            <div class="alert alert-danger">{{ error.message }}</div>
+                        {% endfor %}
 
-    {{ form_row(profilForm.pseudo) }}
-    {{ form_row(profilForm.nom) }}
-    {{ form_row(profilForm.prenom) }}
-    {{ form_row(profilForm.telephone) }}
-    {{ form_row(profilForm.email) }}
+                        {{ form_errors(profilForm) }}
 
-    {{ form_row(profilForm.plainPassword) }}
+                        {{ form_row(profilForm.pseudo) }}
+                        {{ form_row(profilForm.nom) }}
+                        {{ form_row(profilForm.prenom) }}
+                        {{ form_row(profilForm.telephone) }}
+                        {{ form_row(profilForm.email) }}
+                        {{ form_row(profilForm.plainPassword) }}
+                        {{ form_row(profilForm.photo) }}
 
-    {{ form_row(profilForm.photo) }}
-    {% if app.user.photo %}
-        <img src="{{ asset('uploads/photos/' ~ app.user.photo) }}" alt="Photo de profil" style="width: 150px; height: 150px; object-fit: cover;">
-    {% else %}
-        <img src="{{ asset('images/default-avatar.png') }}" alt="Photo par défaut">
-    {% endif %}
+                        <div class="d-flex justify-content-center gap-3 mt-3">
+                            <a href="{{ path('app_home_index') }}" class="btn btn-secondary">Annuler</a>
+                            <button type="submit" class="btn btn-primary">Enregistrer</button>
+                        </div>
 
-    <a href="{{ path('app_home_index') }}" class="btn btn-secondary">Annuler</a>
-    <button type="submit" class="btn btn-primary">Enregistrer</button>
-    {{ form_end(profilForm) }}
+                        {{ form_end(profilForm) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

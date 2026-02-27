@@ -3,19 +3,35 @@
 {% block title %}Page de {{ participant.pseudo }}{% endblock %}
 
 {% block body %}
-    <h1>Page de {{ participant.pseudo }} </h1>
-    {% if participant.photo %}
-        <img src="{{ asset('uploads/photos/' ~ participant.photo) }}" alt="Photo de profil" style="width: 150px; height: 150px; object-fit: cover;">
-    {% else %}
-        <img src="{{ asset('images/default-avatar.png') }}" alt="Photo par défaut">
-    {% endif %}
-    <p><strong>Prénom :</strong> {{ participant.prenom }}</p>
-    <p>Nom : {{ participant.nom }}</p>
-    <p>Téléphone : {{ participant.telephone }}</p>
-    <p>Email : {{ participant.email }}</p>
-    <p>Ville de rattachement : {{ participant.sites.nomSite }}</p>
+    <div class="container mt-4">
+        <h1 class="text-center mb-4">{{ participant.pseudo }}</h1>
 
+        <div class="row align-items-center">
+            <div class="col-md-3 text-center">
+                {% if participant.photo %}
+                    <img src="{{ asset('uploads/photos/' ~ participant.photo) }}"
+                         alt="Photo de profil"
+                         class="rounded-circle"
+                         style="width: 150px; height: 150px; object-fit: cover;">
+                {% else %}
+                    <img src="{{ asset('images/default-avatar.png') }}"
+                         alt="Photo par défaut"
+                         class="rounded-circle"
+                         style="width: 150px; height: 150px; object-fit: cover;">
+                {% endif %}
+            </div>
 
-    <a href="{{ path('app_home_index') }}" class="btn btn-secondary">Retour</a>
+            <div class="col-md-9">
+                <p><strong>Prénom :</strong> {{ participant.prenom }}</p>
+                <p><strong>Nom :</strong> {{ participant.nom }}</p>
+                <p><strong>Téléphone :</strong> {{ participant.telephone }}</p>
+                <p><strong>Email :</strong> {{ participant.email }}</p>
+                <p><strong>Ville de rattachement :</strong> {{ participant.sites.nomSite }}</p>
+            </div>
+        </div>
 
+        <div class="text-center mt-3">
+            <a href="{{ path('app_home_index') }}" class="btn btn-secondary">Retour</a>
+        </div>
+    </div>
 {% endblock %}

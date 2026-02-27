@@ -7,6 +7,7 @@ use App\Form\ProfilType;
 use App\Repository\ParticipantsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -28,6 +29,15 @@ final class UserController extends AbstractController
             $plainPassword = $form->get('plainPassword')->getData();
             if ($plainPassword) {
                 $participant->setPassword($userPasswordHasher->hashPassword($participant, $plainPassword));
+            }
+            $photoFile = $form->get('photo')->getData();
+            if ($photoFile instanceof UploadedFile) {
+                $newFileName = uniqid() . '.' . $photoFile->guessExtension();
+                $photoFile->move(
+                    $this->getParameter('photos_directory'),
+                    $newFileName
+                );
+                $participant->setPhoto($newFileName);
             }
 
             $entityManager->persist($participant);

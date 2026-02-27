@@ -4,8 +4,12 @@
 
 {% block body %}
     <h1>Page de {{ participant.pseudo }} </h1>
-
-    <p>Prénom : {{ participant.prenom }}</p>
+    {% if participant.photo %}
+        <img src="{{ asset('uploads/photos/' ~ participant.photo) }}" alt="Photo de profil" style="width: 150px; height: 150px; object-fit: cover;">
+    {% else %}
+        <img src="{{ asset('images/default-avatar.png') }}" alt="Photo par défaut">
+    {% endif %}
+    <p><strong>Prénom :</strong> {{ participant.prenom }}</p>
     <p>Nom : {{ participant.nom }}</p>
     <p>Téléphone : {{ participant.telephone }}</p>
     <p>Email : {{ participant.email }}</p>

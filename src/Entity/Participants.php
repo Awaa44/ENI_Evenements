@@ -85,6 +85,9 @@ class Participants implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\JoinColumn(nullable: false)]
     private ?Sites $sites = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $photo = null;
+
     public function __construct()
     {
         $this->inscriptions = new ArrayCollection();
@@ -312,6 +315,18 @@ class Participants implements UserInterface, PasswordAuthenticatedUserInterface
     public function setSites(?Sites $sites): static
     {
         $this->sites = $sites;
+
+        return $this;
+    }
+
+    public function getPhoto(): ?string
+    {
+        return $this->photo;
+    }
+
+    public function setPhoto(?string $photo): static
+    {
+        $this->photo = $photo;
 
         return $this;
     }

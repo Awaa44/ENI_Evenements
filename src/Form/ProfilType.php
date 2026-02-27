@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -43,17 +44,11 @@ class ProfilType extends AbstractType
                 'first_options' => ['label' => 'Nouveau mot de passe'],
                 'second_options' => ['label' => 'Saisissez une seconde fois le nouveau mot de passe :'],
             ])
-//            ->add('nomSite', PasswordType::class, [
-//                'mapped' => false,
-//                'label' => 'Ville de rattachement',
-//            ])
-//            ->add('profilePhoto', PasswordType::class, [
-//                'mapped' => false,
-//                'label' => 'Ma photo',
-//            ])
-
-
-        ;
+            ->add('photo', FileType::class, [
+                'label' => 'Ma photo',
+                'mapped' => false,
+                'required' => false,
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

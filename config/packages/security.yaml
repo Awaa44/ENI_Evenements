@@ -21,6 +21,9 @@ security:
             form_login:
                 login_path: app_login
                 check_path: app_login
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 604800 # 1 semaine en secondes
             logout:
                 path: app_logout
                 target: app_login
@@ -33,10 +36,9 @@ security:
 
     # Note: Only the *first* matching rule is applied
     access_control:
-        # - { path: ^/gestionadmin, roles: ROLE_ADMIN }
+        - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/home, roles: ROLE_USER }
         - { path: ^/profile, roles: ROLE_USER }
-        - { path: ^/register, roles: ROLE_ADMIN }
 
 
 when@test:

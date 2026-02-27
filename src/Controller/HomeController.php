@@ -21,7 +21,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class HomeController extends AbstractController
 {
     #[Route('/index', name: '_index')]
-    public function index(SitesRepository $sitesRepository, SortiesRepository $sortieRepository, Request $request): Response
+    public function index(SitesRepository $sitesRepository, SortiesRepository $sortieRepository): Response
     {
         //Liste des sites
         $sites = $sitesRepository->findAll();
@@ -33,7 +33,7 @@ final class HomeController extends AbstractController
         $idParticipant = $user->getId();
         //Tableau
         $tableau = $sortieRepository->getSortiesHome($idParticipant);
-        dd($tableau);
+//        dd($tableau);
 
         // Mise en session  de la requete
 //        $request->getSession()->set('tableau', $tableau);

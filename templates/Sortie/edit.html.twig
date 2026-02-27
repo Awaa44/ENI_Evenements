@@ -15,22 +15,22 @@
             {{ form_errors(sortie_form) }}
             {{ form_widget(sortie_form.lieux, {'attr': {'class': 'form-select d-none'}}) }}
 
-            <div class="group">
+            <div class="group required-label">
                 {{ form_label(sortie_form.nom) }}
                 {{ form_widget(sortie_form.nom) }}
                 {{ form_errors(sortie_form.nom) }}
             </div>
-            <div class="group">
+            <div class="group required-label">
                 {{ form_label(sortie_form.dateHeureDebut) }}
                 {{ form_widget(sortie_form.dateHeureDebut) }}
                 {{ form_errors(sortie_form.dateHeureDebut) }}
              </div>
-            <div class="group">
+            <div class="group required-label">
                 {{ form_label(sortie_form.dateLimiteInscription) }}
                 {{ form_widget(sortie_form.dateLimiteInscription) }}
                 {{ form_errors(sortie_form.dateLimiteInscription) }}
             </div>
-            <div class="group">
+            <div class="group required-label">
                 {{ form_label(sortie_form.duree) }}
                 <div class="input-group">
                     {{ form_widget(sortie_form.duree, {'attr': {'class': 'form-control'}}) }}
@@ -38,24 +38,24 @@
                 </div>
                 {{ form_errors(sortie_form.duree) }}
             </div>
-            <div class="group">
+            <div class="group required-label">
                 {{ form_label(sortie_form.nbInscriptionMax) }}
                 {{ form_widget(sortie_form.nbInscriptionMax) }}
                 {{ form_errors(sortie_form.nbInscriptionMax) }}
             </div>
-            <div class="group">
+            <div class="group required-label">
                 {{ form_label(sortie_form.infosSortie) }}
                 {{ form_widget(sortie_form.infosSortie) }}
                 {{ form_errors(sortie_form.infosSortie) }}
             </div>
             <br>
             <p class="card-body pt-0">Site organisateur : {{ sortie.organisateur.sites.nomSite }}</p>
-            <div class="group">
+            <div class="group required-label">
                 {{ form_label(sortie_form.villes) }}
                 {{ form_widget(sortie_form.villes) }}
                 {{ form_errors(sortie_form.villes) }}
             </div>
-            <div class="group">
+            <div class="group required-label">
                 {{ form_label(sortie_form.lieux) }}
                 <div><select class="form-select" id="lieu-select">
                         <option value="">--Sélectionner un lieu--</option>

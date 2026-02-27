@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 this.getDateLimiteInscription()
 and this.getDateHeureDebut()
 and this.getDateLimiteInscription() <= this.getDateHeureDebutInfCinqJours()",
-    message:'La date limite d\'inscription doit être inférieure de 5 jours à la date de sortie')]
+    message:'La date limite d\'inscription doit être inférieure de 5 jours par rapport à la date de sortie')]
 #[Assert\Expression(
     "this.getLieux()", message: 'Un lieu de sortie doit être sélectionné'
 )]

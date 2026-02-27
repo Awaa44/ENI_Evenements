@@ -19,3 +19,8 @@ footer .text-muted,
 footer a.text-muted {
     color: #333 !important; /* Gris très foncé */
 }
+
+.required-label .form-label::after {
+    content: " *";
+    color: red;
+}

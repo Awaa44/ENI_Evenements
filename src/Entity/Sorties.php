@@ -68,7 +68,7 @@ class Sorties
     #[ORM\JoinColumn(nullable: false)]
     private ?Participants $organisateur = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(fetch: 'EAGER')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Etats $etats = null;
 

@@ -139,7 +139,8 @@ final class SortieController extends AbstractController
     }
 
     #[Route('/delete/{id}', name: '_delete', requirements: ['id'=> '\d+'])]
-    public function deleteSortie(Request $request, EntityManagerInterface $em, Sorties $sortie): Response {
+    public function deleteSortie(Request $request, EntityManagerInterface $em, Sorties $sortie): Response
+    {
 
         //récupération du totem de sécurité
         $token = $request->query->get('_token');
@@ -167,7 +168,49 @@ final class SortieController extends AbstractController
         return $this->redirectToRoute('app_sortie_detail', ['id' => $sortie->getId()]);
     }
 
+    #[Route('/update-cancel/{id}', name: '_update_cancel', requirements: ['id'=> '\d+'])]
+    public function updateCancelSortie(Request $request, EntityManagerInterface $em, Sorties $sortie,
+                                 EtatsRepository $etatsRepository): Response
+    {
+        $sortieForm = $this->createForm(SortieType::class, $sortie);
+        $sortieForm->handleRequest($request);
 
 
+        return $this->render('sortie/cancel.html.twig', [
+            'sortie_form' => $sortieForm,
+            'sortie' => $sortie,
+            'isEdit' => true,
+        ]);
+    }
+
+    #[Route('/cancel/{id}', name: '_cancel', requirements: ['id'=> '\d+'])]
+    function canceledSortie(Request $request, EntityManagerInterface $em, Sorties $sortie,
+                            EtatsRepository $etatsRepository): Response
+    {
+        //récupération du totem de sécurité
+        $token = $request->query->get('_token');
+
+        if($this->isCsrfTokenValid('cancel'.$sortie->getId(), $token) /*&&
+            ($this->getUser() === $sortie->getOrganisateur()->getId() || $this->isGranted('ROLE_ADMIN'))*/)
+        {
+            if($sortie->getEtats()->getId() === 2){
+                $etat = $etatsRepository->find(6);
+                $sortie->setEtats($etat);
+                $sortie->setEtatSortie(6);
+                $em->flush();
+
+                $message = 'Votre sortie a été annulée';
+                $this->addFlash('success', $message);
+                return $this->redirectToRoute('app_home_index');
+            } else {
+                $message = 'Impossible de supprimer une sortie avec ce statut';
+                $this->addFlash('danger', $message);
+                return $this->redirectToRoute('app_sortie_detail', ['id' => $sortie->getId()]);
+            }
+        }
+        $message = 'Impossible de supprimer votre sortie';
+        $this->addFlash('danger', $message);
+        return $this->redirectToRoute('app_sortie_detail', ['id' => $sortie->getId()]);
+    }
 
 }

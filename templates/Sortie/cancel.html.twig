@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+{% block title %}Annuler une sortie | {{ parent() }} {% endblock %}
+
+
+{% block body %}
+
+    <h2 class="text-center p-3">Annuler une sortie</h2>
+
+    <div class="card mt-2 mb-2 w-100">
+        <div class="card-body">
+            <h3 class="card-title text-center">Description de la sortie : </h3>
+            <p class="card-body pt-0">Nom de la sortie: {{ sortie.nom }}</p>
+            <p class="card-body pt-0">Date et heure de la sortie : {{ sortie.dateHeureDebut|date("d/m/Y h:m") }}</p>
+            <p class="card-body pt-0">Site organisateur : {{ sortie.organisateur.sites.nomSite }}</p>
+            <p class="card-body pt-0">Lieu : {{ sortie.lieux.nomLieu }} - {{ sortie.lieux.rue }} - {{ sortie.lieux.villes.codePostal }} {{ sortie.lieux.villes.nomVille }}</p>
+            <p class="card-body pt-0">Motif :</p>
+            <div class="card-body pt-0">
+                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+            </div>
+            <div class="text-center">
+                <a href="{{ path('app_sortie_cancel', {id: sortie.id, _token: csrf_token('cancel' ~ sortie.id)}) }}"
+                   class="btn btn-danger"
+                   onclick="return confirm('Etes-vous sûr de vouloir annuler cette sortie ?')"
+                >Annuler la sortie</a>
+                <a class="btn btn-secondary" href="{{ path('app_sortie_detail', {id: sortie.id}) }}">
+                    Annuler la demande
+                </a>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,6 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Créer une sortie | {{ parent() }} {% endblock %}
+{% block title %}
+    {% if isEdit %}
+        Modifier une sortie | {{ parent() }}
+    {% else %}
+        Créer une sortie | {{ parent() }}
+    {% endif %}
+
+{% endblock %}
 
 {% block body %}
     {% if isEdit %}
@@ -127,7 +134,7 @@
                 {% if isEdit %}
                 <a href="{{ path('app_sortie_delete', {id: sortie.id, _token: csrf_token('delete' ~ sortie.id)}) }}"
                    class="btn btn-danger"
-                   onclick="return confirm('Etes-vous sûr???')"
+                   onclick="return confirm('Etes-vous sûr de vouloir supprimer cette sortie ?')"
                 >Supprimer</a>
                 {% endif %}
             </div>

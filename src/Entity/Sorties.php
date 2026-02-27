@@ -33,10 +33,6 @@ class Sorties
 
     #[ORM\Column]
     #[Assert\NotBlank(message:'La sortie doit avoir une date de début')]
-    #[Assert\GreaterThan(
-        value: new \DateTime('+5 days'),
-        message: 'La date de sortie doit être supérieure de 5 jours à la date du jour'
-    )]
     private ?\DateTime $dateHeureDebut = null;
 
     #[ORM\Column(nullable: true)]

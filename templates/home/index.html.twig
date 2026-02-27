@@ -15,11 +15,13 @@
 <div>
     <div class="div_info_user">
         <p>Date du jour : {{ "now"|date('d/m/Y') }}</p>
-        <p>Participant : {{  app.user.prenom }} {{ app.user.nom|slice(0, 1) }}.</p>
+        <p>Participant : {{ app.user.prenom }} {{ app.user.nom|slice(0, 1) }}.</p>
     </div>
     <div class="filters-container">
-        <div class="filter-row">
-            <label for="filtreSite">Site :</label>
+
+        <!-- Site -->
+        <div class="filter-item">
+            <label for="filtreSite">Site</label>
             <select id="filtreSite">
                 <option value="">Choississez un site</option>
                 {% for site in sites %}
@@ -28,24 +30,33 @@
             </select>
         </div>
 
-        <div class="filter-row">
-            <label for="inputSearch">Le nom de la sortie contient :</label>
-            <input type="text" id="inputSearch">
+        <!-- Recherche -->
+        <div class="filter-item">
+            <label for="inputSearch">Recherche</label>
+            <input type="text" id="inputSearch" placeholder="Nom de la sortie...">
         </div>
 
-        <div class="filter-row">
-            <label>Date comprise entre :</label>
-            <input type="date" id="inputDateDebut">
-            <span>et</span>
-            <input type="date" id="inputDateFin">
+        <!-- Dates -->
+        <div class="filter-item">
+            <label>Période</label>
+            <div class="date-group">
+                <input type="date" id="inputDateDebut">
+                <span>→</span>
+                <input type="date" id="inputDateFin">
+            </div>
         </div>
 
-        <div class="filter-checkboxes">
-            <label><input type="checkbox" id="filtreOrganisateur"> Sorties dont je suis l'organisateur/trice</label>
-            <label><input type="checkbox" id="filtreInscrit"> Sorties auxquelles je suis inscrit/e</label>
-            <label><input type="checkbox" id="filtreNonInscrit"> Sorties auxquelles je ne suis pas inscrit/e</label>
-            <label><input type="checkbox" id="filtrePassees"> Sorties passées</label>
+        <!-- Checkboxes -->
+        <div class="filter-item">
+            <label>Filtres avancés</label>
+            <div class="filter-checkboxes">
+                <label><input type="checkbox" id="filtreOrganisateur"> Organisateur</label>
+                <label><input type="checkbox" id="filtreInscrit"> Inscrit</label>
+                <label><input type="checkbox" id="filtreNonInscrit"> Non inscrit</label>
+                <label><input type="checkbox" id="filtrePassees"> Passées</label>
+            </div>
         </div>
+
     </div>
     <table>
         <thead>

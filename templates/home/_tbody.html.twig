@@ -1,13 +1,13 @@
 {% for data in tableau %}
     <tr>
-        <th scope="row">{{ data.nom }}</th>
-        <th scope="row">{{ data.dateHeureDebut|date('d/m/Y H:i')}}</th>
-        <th scope="row">{{ data.dateLimiteInscription|date('d/m/Y')}}</th>
-        <th scope="row">{{ data.nbInscrits~'/'~data.nbInscriptionMax }}</th>
-        <th scope="row">{{ data.etat }}</th>
-        <th scope="row">{{ data.inscrit }}</th>
-        <th scope="row"><a href="#">{{ data.organisateur }}</a></th>
-        <th scope="row">
+        <td>{{ data.nom }}</td>
+        <td>{{ data.dateHeureDebut|date('d/m/Y H:i')}}</td>
+        <td>{{ data.dateLimiteInscription|date('d/m/Y')}}</td>
+        <td>{{ data.nbInscrits~'/'~data.nbInscriptionMax }}</td>
+        <td>{{ data.etat }}</td>
+        <td>{{ data.inscrit }}</td>
+        <td><a href="#">{{ data.organisateur }}</a></td>
+        <td>
             {% if data.etat == 'Ouverte' %}
                 <strong> - </strong><a href="#">Annuler</a>
                 {% if data.inscrit != 'X' and data.dateLimiteInscription > date()  %}
@@ -31,7 +31,7 @@
                 </a>
             {% endif %}
             <strong> - </strong><a href="{{ path('app_sortie_detail', { id: data.id}) }}">Afficher</a>
-        </th>
-        <th scope="row">{{ data.site }}</th>
+        </td>
+        <td>{{ data.site }}</td>
     </tr>
 {% endfor %}

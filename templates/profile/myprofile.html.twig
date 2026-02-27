@@ -10,7 +10,6 @@
         <div class="alert alert-danger">{{ error.message }}</div>
     {% endfor %}
 
-
     {{ form_errors(profilForm) }}
 
     {{ form_row(profilForm.pseudo) }}
@@ -20,9 +19,6 @@
     {{ form_row(profilForm.email) }}
 
     {{ form_row(profilForm.plainPassword) }}
-
-    {#    {{ form_row(profilForm.villederattachement) }} #}
-    {#    {{ form_row(profilForm.photoprofil) }} #}
 
     <a href="{{ path('app_home_index') }}" class="btn btn-secondary">Annuler</a>
     <button type="submit" class="btn btn-primary">Enregistrer</button>

@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Participants;
 use App\Form\ProfilType;
-use App\Form\RegistrationType;
 use App\Repository\ParticipantsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,37 +16,6 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 final class UserController extends AbstractController
 {
-    #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
-    {
-        $participant = new Participants();
-//      $participant->setRoles(['ROLE_USER']);
-        $form = $this->createForm(RegistrationType::class, $participant);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            /** @var string $plainPassword */
-            $plainPassword = $form->get('plainPassword')->getData();
-
-            $participant->setActif(true);
-            $participant->setAdministrateur(false);
-
-            // encode the plain password
-            $participant->setPassword($userPasswordHasher->hashPassword($participant, $plainPassword));
-
-            $entityManager->persist($participant);
-            $entityManager->flush();
-
-            $this->addFlash('success', "Votre compte à été créée avec succès !");
-
-            return $this->redirectToRoute('app_login');
-        }
-
-        return $this->render('inscription/register.html.twig', [
-            'registrationForm' => $form->createView(),
-        ]);
-    }
-
     #[Route('/profile', name: 'app_profile')]
     #[IsGranted('ROLE_USER')]
     public function profile(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
@@ -61,7 +29,6 @@ final class UserController extends AbstractController
             if ($plainPassword) {
                 $participant->setPassword($userPasswordHasher->hashPassword($participant, $plainPassword));
             }
-
 
             $entityManager->persist($participant);
             $entityManager->flush();
@@ -103,6 +70,10 @@ final class UserController extends AbstractController
     public function showProfile(int $id, ParticipantsRepository $participantsRepository): Response
     {
         $participant = $participantsRepository->find($id);
+
+        if (!$participant) {
+            throw $this->createNotFoundException('Participant non trouvé !');
+        }
 
         return $this->render('profile/show.html.twig', [
             'participant' => $participant,

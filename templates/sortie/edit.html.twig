@@ -68,6 +68,12 @@
                         <option value="">--Sélectionner un lieu--</option>
                     </select>
                 </div>
+                <a href="{{ path('app_sortie_create_lieu') }}" target="_blank">Créer un lieu</a>
+                <!-- Bouton déclencheur -->
+                <button type="button" data-bs-toggle="modal" data-bs-target="#maPopin">
+                    Ajouter un lieu
+                </button>
+
 
                 <script>
                     document.getElementById('sortie_villes').addEventListener('change', function() {
@@ -120,6 +126,8 @@
                     }
                 });
             </script>
+
+
             <br>
             <div class="text-center">
                 <button type="submit" class="btn btn-primary" value="creer" name="creer">
@@ -139,6 +147,43 @@
                 {% endif %}
             </div>
             {{ form_end(sortie_form) }}
+
+            <!-- La popin -->
+            <div class="modal fade" id="maPopin" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Titre</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            {{ form_start(lieu_form) }}
+
+                            {{ form_label(lieu_form.nomLieu) }}
+                            {{ form_widget(lieu_form.nomLieu) }}
+                            {{ form_errors(lieu_form.nomLieu) }}
+
+                            {{ form_label(lieu_form.rue) }}
+                            {{ form_widget(lieu_form.rue) }}
+                            {{ form_errors(lieu_form.rue) }}
+
+                            {{ form_label(lieu_form.villes) }}
+                            {{ form_widget(lieu_form.villes) }}
+                            {{ form_errors(lieu_form.villes) }}
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                <button type="submit" class="btn btn-primary" value="creerLieu" name="creerLieu">
+                                    Enregistrer
+                                </button>
+                            </div>
+
+                            {{ form_end(lieu_form) }}
+                        </div>
+
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <br>

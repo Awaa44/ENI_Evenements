@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Ajouter un lieu | {{ parent() }} {% endblock %}
+
+{% block body %}
+
+    {{ form_start(lieu_form) }}
+
+        {{ form_label(lieu_form.nomLieu) }}
+        {{ form_widget(lieu_form.nomLieu) }}
+        {{ form_errors(lieu_form.nomLieu) }}
+
+        {{ form_label(lieu_form.rue) }}
+        {{ form_widget(lieu_form.rue) }}
+        {{ form_errors(lieu_form.rue) }}
+
+        {{ form_label(lieu_form.villes) }}
+        {{ form_widget(lieu_form.villes) }}
+        {{ form_errors(lieu_form.villes) }}
+
+    <br>
+        <button type="submit" class="btn btn-primary" value="creer" name="creer">
+            Enregistrer
+        </button>
+
+    {{ form_end(lieu_form) }}
+
+{% endblock %}

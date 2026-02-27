@@ -6,6 +6,7 @@ use App\Entity\Etats;
 use App\Entity\Lieux;
 use App\Entity\Sorties;
 use App\Entity\Villes;
+use App\Form\LieuxType;
 use App\Form\SortieType;
 use App\Repository\EtatsRepository;
 use App\Repository\LieuxRepository;
@@ -34,20 +35,29 @@ final class SortieController extends AbstractController
 
     #[Route('/create', name: '_create')]
     public function createSortie(Request $request, EntityManagerInterface $em,
-                                 ParticipantsRepository $participantRepository,
-    EtatsRepository $etatsRepository): Response
+        EtatsRepository $etatsRepository): Response
     {
         $sortie = new Sorties();
         $sortieForm = $this->createForm(SortieType::class, $sortie);
         $sortieForm->handleRequest($request);
 
-        //test à enlever
-        //$participant = $participantRepository->find(1);
-        //$sortie->setOrganisateur($participant);
+        $lieu = new Lieux();
+        $lieu_form = $this->createForm(LieuxType::class, $lieu);
+        $lieu_form->handleRequest($request);
 
         //enregistrement de l'organisateur par défaut avec la personne connectée
         $sortie->setOrganisateur($this->getUser());
 
+        //créer lieux
+        if ($lieu_form->isSubmitted() && $lieu_form->isValid()) {
+            if ($request->request->get('creerLieu')){
+                $em->persist($lieu);
+                $em->flush();
+                return $this->redirectToRoute('app_sortie_create');
+            }
+        }
+
+        //créer la sortie en fonction du statut
         if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
             if ($request->request->get('creer')) {
                 //mettre l'état créée par défaut
@@ -74,6 +84,30 @@ final class SortieController extends AbstractController
             'sortie_form' => $sortieForm,
             'sortie' => $sortie,
             'isEdit' => false,
+            'lieu_form'=> $lieu_form,
+        ]);
+    }
+
+    #[Route('/createLieu', name: '_create_lieu')]
+    public function createLieux(Request $request, EntityManagerInterface $em): Response
+    {
+        $lieu = new Lieux();
+        $lieu_form = $this->createForm(LieuxType::class, $lieu);
+
+        $lieu_form->handleRequest($request);
+
+        if ($lieu_form->isSubmitted() && $lieu_form->isValid()) {
+            $em->persist($lieu);
+            $em->flush();
+
+            $message = 'Le lieu a été créé avec succès';
+            $this->addFlash('success', $message);
+
+            return $this->redirectToRoute('app_sortie_create');
+        }
+
+        return $this->render('lieu/edit.html.twig', [
+            'lieu_form'=> $lieu_form,
         ]);
     }
 

@@ -138,7 +138,7 @@ class AppFixtures extends Fixture
             $sortie->setDuree(rand(60,240));
             $sortie->setDateLimiteInscription((new \DateTime())->modify('+' . rand(0,10) . ' days'));
             $sortie->setNbInscriptionMax(rand(5,30));
-            $sortie->setInfosSortie("Sortie organisée autour du thème " . $sortie->getNom());
+            $sortie->setInfosSortie("sortie organisée autour du thème " . $sortie->getNom());
             $sortie->setUrlPhoto(null);
             $sortie->setOrganisateur($participants[array_rand($participants)]);
             $sortie->setEtats($etats[array_rand($etats)]);

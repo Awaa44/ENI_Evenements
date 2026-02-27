@@ -1,0 +1,77 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+h2 {
+    margin-bottom: 20px;
+}
+
+/* TABLEAU */
+.table-container {
+    margin-top: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table, th, td {
+    border: 2px solid black;
+}
+
+th, td {
+    padding: 8px;
+    text-align: left;
+}
+
+/* BOUTON CREER */
+.bottom-button {
+    margin-top: 20px;
+}
+
+.btn-create {
+    display: inline-block;
+    padding: 12px 20px;
+    border: 2px solid black;
+    background: white;
+    text-decoration: none;
+    color: black;
+}
+.filters-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.filter-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.filter-row input,
+.filter-row select {
+    padding: 5px;
+    min-width: 200px;
+}
+
+.filter-checkboxes {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 300px;
+}
+.filters-container {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+/*.div_info_user*/
+/*{*/
+/*    display: flex;*/
+/*    //justify-content:lyuhjobgk ;*/
+/*}*/

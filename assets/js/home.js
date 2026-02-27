@@ -1,5 +1,8 @@
-
 document.addEventListener("DOMContentLoaded", function () {
+
+    const cbInscrit = document.getElementById("filtreInscrit");
+    const cbNonInscrit = document.getElementById("filtreNonInscrit");
+
     function appliquerFiltres()
     {
         const site = document.getElementById("filtreSite").value;
@@ -7,47 +10,33 @@ document.addEventListener("DOMContentLoaded", function () {
         const dateDebut = document.getElementById("inputDateDebut").value;
         const dateFin = document.getElementById("inputDateFin").value;
         const organisateur = document.getElementById("filtreOrganisateur").checked;
-        const inscrit = document.getElementById("filtreInscrit").checked;
-        const nonInscrit = document.getElementById("filtreNonInscrit").checked;
+        const inscrit = cbInscrit.checked;
+        const nonInscrit = cbNonInscrit.checked;
         const passees = document.getElementById("filtrePassees").checked;
 
         const params = new URLSearchParams();
 
-        //--------------------------------Filtre sites--------------------------------------//
-        if (site) {
-            params.append("idSite", site);
-        }
-        //--------------------------------Filtre nomSortie--------------------------------------//
-        if (nom) {
-            params.append("nomSortie", nom);
-        }
-        //--------------------------------Filtre dates--------------------------------------//
+        // -------- Site
+        if (site) params.append("idSite", site);
+
+        // -------- Nom
+        if (nom) params.append("nomSortie", nom);
+
+        // -------- Dates
         if ((dateDebut && !dateFin) || (!dateDebut && dateFin)) {
             return;
         }
+
         if (dateDebut && dateFin) {
             params.append("dateDebut", dateDebut);
             params.append("dateFin", dateFin);
         }
-        //--------------------------------Filtre checkbox--------------------------------------//
-        if (inscrit && nonInscrit) {
-            alert("Vous ne pouvez pas sélectionner les deux filtres inscrit et non inscrit.");
-            return;
-        }
-        if (organisateur) {
-            params.append("organisateur", 1);
-        }
-        if (inscrit) {
-            params.append("inscrit", 1);
-        }
 
-        if (nonInscrit) {
-            params.append("nonInscrit", 1);
-        }
-
-        if (passees) {
-            params.append("passees", 1);
-        }
+        // -------- Checkbox
+        if (organisateur) params.append("organisateur", 1);
+        if (inscrit) params.append("inscrit", 1);
+        if (nonInscrit) params.append("nonInscrit", 1);
+        if (passees) params.append("passees", 1);
 
         fetch("/home/filtrer?" + params.toString())
             .then(response => response.text())
@@ -56,6 +45,22 @@ document.addEventListener("DOMContentLoaded", function () {
             });
     }
 
+    // 🔥 Gestion exclusivité inscrit / nonInscrit
+    cbInscrit.addEventListener("change", function () {
+        if (this.checked) {
+            cbNonInscrit.checked = false;
+        }
+        appliquerFiltres();
+    });
+
+    cbNonInscrit.addEventListener("change", function () {
+        if (this.checked) {
+            cbInscrit.checked = false;
+        }
+        appliquerFiltres();
+    });
+
+    // Autres listeners
     document.getElementById("filtreSite")
         .addEventListener("change", appliquerFiltres);
 
@@ -68,6 +73,10 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("inputDateFin")
         .addEventListener("change", appliquerFiltres);
 
-    document.querySelectorAll("input[type=checkbox]")
-        .forEach(cb => cb.addEventListener("change", appliquerFiltres));
+    document.getElementById("filtreOrganisateur")
+        .addEventListener("change", appliquerFiltres);
+
+    document.getElementById("filtrePassees")
+        .addEventListener("change", appliquerFiltres);
+
 });

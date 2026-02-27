@@ -9,24 +9,28 @@
         <th scope="row"><a href="#">{{ data.organisateur }}</a></th>
         <th scope="row">
             {% if data.etat == 'Ouverte' %}
-                <a href="#">Annuler</a>
-                {% if data.inscrit != 'X' %}
-                    <a href="{{ path('app_home_inscrire', { idSortie: data.id}) }}"
+                <strong> - </strong><a href="#">Annuler</a>
+                {% if data.inscrit != 'X' and data.dateLimiteInscription > date()  %}
+                    <strong> - </strong><a href="{{ path('app_home_inscrire', { idSortie: data.id}) }}"
                        onclick="return confirm('Etes vous vraiment sûr de vouloir vous inscrire a cette sortie : {{ data.nom }} ?')">
                         S'inscrire
                     </a>
                 {% endif %}
             {% endif %}
             {% if data.etat == 'Créée' %}
-                <a href="#">Modifier</a>
+                <strong> - </strong><a href="{{ path('app_sortie_update', { id: data.id}) }}">Modifier</a>
+                <strong> - </strong><a href="{{ path('app_home_publier', { idSortie: data.id}) }}"
+                   onclick="return confirm('Etes vous vraiment sûr de vouloir publier cette sortie : {{ data.nom }} ?')">
+                    Publier
+                </a>
             {% endif %}
             {% if data.inscrit == 'X' %}
-                <a href="{{ path('app_home_desister', { idSortie: data.id}) }}"
+                <strong> - </strong><a href="{{ path('app_home_desister', { idSortie: data.id}) }}"
                    onclick="return confirm('Etes vous vraiment sûr de vouloir vous désister de la sortie {{ data.nom }} ?')">
                     Se Désister
                 </a>
             {% endif %}
-            <a href="{{ path('app_sortie_detail', { id: data.id}) }}">Afficher</a>
+            <strong> - </strong><a href="{{ path('app_sortie_detail', { id: data.id}) }}">Afficher</a>
         </th>
         <th scope="row">{{ data.site }}</th>
     </tr>

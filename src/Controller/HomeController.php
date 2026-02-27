@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Inscriptions;
 use App\Entity\Participants;
 use App\Entity\Sorties;
+use App\Repository\EtatsRepository;
 use App\Repository\InscriptionsRepository;
 use App\Repository\LieuxRepository;
 use App\Repository\SitesRepository;
@@ -21,7 +22,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class HomeController extends AbstractController
 {
     #[Route('/index', name: '_index')]
-    public function index(SitesRepository $sitesRepository, SortiesRepository $sortieRepository, Request $request): Response
+    public function index(SitesRepository $sitesRepository, SortiesRepository $sortieRepository): Response
     {
         //Liste des sites
         $sites = $sitesRepository->findAll();
@@ -33,7 +34,6 @@ final class HomeController extends AbstractController
         $idParticipant = $user->getId();
         //Tableau
         $tableau = $sortieRepository->getSortiesHome($idParticipant);
-        dd($tableau);
 
         // Mise en session  de la requete
 //        $request->getSession()->set('tableau', $tableau);
@@ -131,5 +131,24 @@ final class HomeController extends AbstractController
         return $this->render('home/_tbody.html.twig', [
             'tableau' => $tableau
         ]);
+    }
+
+    #[Route('/publier/{idSortie}', name: '_publier', requirements: ['idSortie' => '\d+'], methods: ['GET'])]
+    public function publier(
+        SortiesRepository $sortiesRepository,
+        EtatsRepository $etatsRepository,
+        EntityManagerInterface $em,
+        int $idSortie
+    ): Response
+    {
+        $sortie= $sortiesRepository->find($idSortie);
+        if (!$sortie)  {
+            throw new \Exception("Sortie introuvable");
+        }
+        $etat = $etatsRepository->find(2);
+        $sortie->setEtats($etat);
+        $em->flush();
+        $this->addFlash('success', 'Vous avez publier la sortie ' . $sortie->getNom());
+        return $this->redirectToRoute('app_home_index');
     }
 }

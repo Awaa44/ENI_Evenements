@@ -12,9 +12,10 @@
             <p class="card-body pt-0">Nom de la sortie: {{ sortie.nom }}</p>
             <p class="card-body pt-0">Date et heure de la sortie : {{ sortie.dateHeureDebut|date("d/m/Y h:m") }}</p>
             <p class="card-body pt-0">Site organisateur : {{ sortie.organisateur.sites.nomSite }}</p>
-            <p class="card-body pt-0">Lieu : {{ sortie.lieux.nomLieu }} - {{ sortie.lieux.rue }} - {{ sortie.lieux.villes.codePostal }} {{ sortie.lieux.villes.nomVille }}</p>
-            <p class="card-body pt-0">Motif :</p>
+            <p class="card-body pt-0">Lieu : {{ sortie.lieux.nomLieu }} - {{ sortie.lieux.rue }} -
+                {{ sortie.lieux.villes.codePostal }} {{ sortie.lieux.villes.nomVille }}</p>
             <div class="card-body pt-0">
+                <label for="exampleFormControlTextarea1">Motif : </label>
                 <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
             </div>
             <div class="text-center">

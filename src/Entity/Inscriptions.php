@@ -13,11 +13,11 @@ class Inscriptions
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'inscriptions', fetch: 'EAGER')]
+    #[ORM\ManyToOne(inversedBy: 'inscriptions')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Participants $participant = null;
 
-    #[ORM\ManyToOne(inversedBy: 'inscriptions', fetch: 'EAGER')]
+    #[ORM\ManyToOne(inversedBy: 'inscriptions')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Sorties $sortie = null;
 

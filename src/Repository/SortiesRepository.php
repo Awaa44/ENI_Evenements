@@ -95,6 +95,46 @@ class SortiesRepository extends ServiceEntityRepository
             return $query->getQuery()->getArrayResult();
     }
 
+    public function getSortieById(int $id): ?Sorties
+    {
+        return $this->createQueryBuilder('sorties')
+            ->addSelect('participants')
+            ->addSelect('inscriptions')
+            ->addSelect('sites')
+            ->addSelect('etats')
+            ->addSelect('lieux')
+            ->addSelect('villes')
+            ->leftJoin('sorties.inscriptions', 'inscriptions')
+            ->leftJoin('inscriptions.participant', 'participants')
+            ->leftJoin('participants.sites', 'sites')
+            ->leftJoin('sorties.etats', 'etats')
+            ->leftJoin('sorties.lieux', 'lieux')
+            ->leftJoin('lieux.villes', 'villes')
+            ->andWhere('sorties.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    public function getSortie(): array
+    {
+        return $this->createQueryBuilder('sorties')
+            ->addSelect('participants')
+            ->addSelect('inscriptions')
+            ->addSelect('sites')
+            ->addSelect('etats')
+            ->addSelect('lieux')
+            ->addSelect('villes')
+            ->leftJoin('sorties.inscriptions', 'inscriptions')
+            ->leftJoin('inscriptions.participant', 'participants')
+            ->leftJoin('participants.sites', 'sites')
+            ->leftJoin('sorties.etats', 'etats')
+            ->leftJoin('sorties.lieux', 'lieux')
+            ->leftJoin('lieux.villes', 'villes')
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
 //    /**
 //     * @return Sorties[] Returns an array of Sorties objects
 //     */

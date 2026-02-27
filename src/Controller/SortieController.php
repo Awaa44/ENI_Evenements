@@ -25,7 +25,7 @@ final class SortieController extends AbstractController
     #[Route('/{id}', name: '_detail', requirements: ['id' => '\d+'], methods: ['GET'])]
     public function afficherDetail(SortiesRepository $sortieRepository, int $id): Response
     {
-        $sortie = $sortieRepository->find($id);
+        $sortie = $sortieRepository->getSortieById($id);
 
         return $this->render('sortie/detail.html.twig', [
             'sortie' => $sortie,
@@ -42,11 +42,11 @@ final class SortieController extends AbstractController
         $sortieForm->handleRequest($request);
 
         //test à enlever
-        $participant = $participantRepository->find(1);
-        $sortie->setOrganisateur($participant);
+        //$participant = $participantRepository->find(1);
+        //$sortie->setOrganisateur($participant);
 
         //enregistrement de l'organisateur par défaut avec la personne connectée
-        //$sortie->setOrganisateur($this->getUser());
+        $sortie->setOrganisateur($this->getUser());
 
         if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
             if ($request->request->get('creer')) {

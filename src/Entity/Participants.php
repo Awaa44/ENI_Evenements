@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ParticipantsRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
@@ -22,7 +23,10 @@ class Participants implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Assert\NotBlank(message: 'Ce champ ne peut pas être vide')]
+    #[Assert\Email]
     #[ORM\Column(length: 180)]
+    #[Assert\Length(max: 180)]
     private ?string $email = null;
 
     /**
@@ -37,16 +41,26 @@ class Participants implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
+    #[Assert\NotBlank(message: 'Ce champ ne peut pas être vide')]
+    #[Assert\Length(min: 3, max: 30)]
     #[ORM\Column(length: 30)]
     private ?string $pseudo = null;
 
+    #[Assert\NotBlank(message: 'Ce champ ne peut pas être vide')]
+    #[Assert\Length(min: 3, max: 30, minMessage: 'Le nom doit contenir au moins {{ limit }} caractères',
+        maxMessage: 'Le nom ne peut pas dépasser {{ limit }} caractères')]
     #[ORM\Column(length: 30)]
     private ?string $nom = null;
 
+    #[Assert\NotBlank(message: 'Ce champ ne peut pas être vide')]
+    #[Assert\Length(min: 3, max: 30, minMessage: 'Le prénom doit contenir au moins {{ limit }} caractères',
+        maxMessage: 'Le prénom ne peut pas dépasser {{ limit }} caractères')]
     #[ORM\Column(length: 30)]
     private ?string $prenom = null;
 
-    #[ORM\Column(length: 15, nullable: true)]
+    #[Assert\Length(min: 10, max: 15, minMessage: 'Le téléphone doit contenir au moins {{ limit }} chiffres',
+        maxMessage: 'Le téléphone ne peut pas dépasser {{ limit }} chiffres')]
+    #[ORM\Column(length: 15, nullable: true )]
     private ?string $telephone = null;
 
     #[ORM\Column]
@@ -70,6 +84,9 @@ class Participants implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?Sites $sites = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $photo = null;
 
     public function __construct()
     {
@@ -101,7 +118,7 @@ class Participants implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->email;
+        return (string)$this->email;
     }
 
     /**
@@ -146,8 +163,8 @@ class Participants implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function __serialize(): array
     {
-        $data = (array) $this;
-        $data["\0".self::class."\0password"] = hash('crc32c', $this->password);
+        $data = (array)$this;
+        $data["\0" . self::class . "\0password"] = hash('crc32c', $this->password);
 
         return $data;
     }
@@ -298,6 +315,18 @@ class Participants implements UserInterface, PasswordAuthenticatedUserInterface
     public function setSites(?Sites $sites): static
     {
         $this->sites = $sites;
+
+        return $this;
+    }
+
+    public function getPhoto(): ?string
+    {
+        return $this->photo;
+    }
+
+    public function setPhoto(?string $photo): static
+    {
+        $this->photo = $photo;
 
         return $this;
     }

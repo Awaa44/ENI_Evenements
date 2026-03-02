@@ -35,8 +35,18 @@
                             <td>{{ participant.actif ? 'Oui' : 'Non' }}</td>
                             <td>{{ participant.roles|join(', ') }}</td>
                             <td>
-                                <button class="btn btn-warning btn-sm">Rendre inactif</button>
-                                <button class="btn btn-danger btn-sm">Supprimer</button>
+                                {% if participant.actif %}
+                                    <a href="{{ path('app_admin_deactivate_user', {id: participant.id}) }}"
+                                       class="btn btn-warning btn-sm">Rendre inactif</a>
+                                {% else %}
+                                    <a href="{{ path('app_admin_activate_user', {id: participant.id}) }}"
+                                       class="btn btn-success btn-sm">Activer</a>
+                                {% endif %}
+                                <a href="{{ path('app_admin_delete_user', {id: participant.id}) }}"
+                                   class="btn btn-danger btn-sm"
+                                   onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')">
+                                    Supprimer
+                                </a>
                             </td>
                         </tr>
                     {% endfor %}

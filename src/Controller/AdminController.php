@@ -122,4 +122,48 @@ final class AdminController extends AbstractController
             'importForm' => $form->createView(),
         ]);
     }
+
+    #[Route('/admin/deactivate_user/{id}', name: 'app_admin_deactivate_user')]
+    #[IsGranted('ROLE_ADMIN')]
+    public function deactivateUser(Participants $participant, EntityManagerInterface $entityManager): Response
+    {
+
+        $participant->setActif(false);
+
+        $entityManager->persist($participant);
+        $entityManager->flush();
+
+        $this->addFlash('success', "Le compte de cet utilisateur à été déactivée avec succès !");
+
+        return $this->redirectToRoute('app_admin_list_users');
+    }
+
+    #[Route('/admin/activate_user/{id}', name: 'app_admin_activate_user')]
+    #[IsGranted('ROLE_ADMIN')]
+    public function activateUser(Participants $participant, EntityManagerInterface $entityManager): Response
+    {
+
+        $participant->setActif(true);
+
+        $entityManager->persist($participant);
+        $entityManager->flush();
+
+        $this->addFlash('success', "Le compte de cet utilisateur à été activée avec succès !");
+
+        return $this->redirectToRoute('app_admin_list_users');
+    }
+
+    #[Route('/admin/delete_user/{id}', name: 'app_admin_delete_user')]
+    #[IsGranted('ROLE_ADMIN')]
+    public function deleteUser(Participants $participant, EntityManagerInterface $entityManager): Response
+    {
+
+        $entityManager->remove($participant);
+        $entityManager->flush();
+
+        $this->addFlash('success', "Le compte de cet utilisateur à été supprimé avec succès !");
+
+        return $this->redirectToRoute('app_admin_list_users');
+    }
+
 }

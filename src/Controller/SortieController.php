@@ -8,7 +8,9 @@ use App\Entity\Sorties;
 use App\Entity\Villes;
 use App\Form\LieuxType;
 use App\Form\SortieType;
+use App\Form\CancelType;
 use App\Repository\EtatsRepository;
+use App\Repository\InscriptionsRepository;
 use App\Repository\LieuxRepository;
 use App\Repository\ParticipantsRepository;
 use App\Repository\SortiesRepository;
@@ -204,48 +206,42 @@ final class SortieController extends AbstractController
         return $this->redirectToRoute('app_sortie_detail', ['id' => $sortie->getId()]);
     }
 
-    #[Route('/update-cancel/{id}', name: '_update_cancel', requirements: ['id'=> '\d+'])]
-    public function updateCancelSortie(Request $request, Sorties $sortie): Response
+    #[Route('/cancel/{id}', name: 'app_sortie_cancel', requirements: ['id'=> '\d+'], methods: ['GET','POST'])]
+    public function canceledSortie(Request $request, EntityManagerInterface $em, Sorties $sortie,
+                            EtatsRepository $etatsRepository, InscriptionsRepository $inscriptionsRepository): Response
     {
-        $sortieForm = $this->createForm(SortieType::class, $sortie);
+        $sortieForm = $this->createForm(CancelType::class, $sortie);
         $sortieForm->handleRequest($request);
 
-
-        return $this->render('sortie/cancel.html.twig', [
-            'sortie_form' => $sortieForm,
-            'sortie' => $sortie,
-            'isEdit' => true,
-        ]);
-    }
-
-    #[Route('/cancel/{id}', name: '_cancel', requirements: ['id'=> '\d+'])]
-    function canceledSortie(Request $request, EntityManagerInterface $em, Sorties $sortie,
-                            EtatsRepository $etatsRepository): Response
-    {
-        //récupération du totem de sécurité
-        $token = $request->query->get('_token');
-
-        if($this->isCsrfTokenValid('cancel'.$sortie->getId(), $token) /*&&
-            ($this->getUser() === $sortie->getOrganisateur()->getId() || $this->isGranted('ROLE_ADMIN'))*/)
+        if($sortieForm->isSubmitted() && $sortieForm->isValid())
+            /*&& ($this->getUser() === $sortie->getOrganisateur() || $this->isGranted('ROLE_ADMIN'))*/
         {
-            if($sortie->getEtats()->getId() === 2){
-                $etat = $etatsRepository->find(6);
-                $sortie->setEtats($etat);
-                $sortie->setEtatSortie(6);
-                $em->flush();
-
-                $message = 'Votre sortie a été annulée';
-                $this->addFlash('success', $message);
-                return $this->redirectToRoute('app_home_index');
-            } else {
+            if($sortie->getEtats()->getId() !== 2) {
                 $message = 'Impossible d\'annuler une sortie avec ce statut';
                 $this->addFlash('danger', $message);
                 return $this->redirectToRoute('app_sortie_detail', ['id' => $sortie->getId()]);
             }
-        }
-        $message = 'Impossible d\'annuler une sortie avec ce statut';
-        $this->addFlash('danger', $message);
-        return $this->redirectToRoute('app_sortie_detail', ['id' => $sortie->getId()]);
-    }
 
+            //passage automatique des inscrits à false quand une sortie est annulée
+            $inscrits = $inscriptionsRepository->findBy(['sortie' => $sortie]);
+            if($inscrits) {
+                foreach ($inscrits as $inscrit) {
+                    $inscrit->setIsInscrit(false);
+                }
+            }
+            $etat = $etatsRepository->find(6);
+            $sortie->setEtats($etat);
+            $sortie->setEtatSortie(6);
+            $em->flush();
+
+            $message = 'Votre sortie a été annulée';
+            $this->addFlash('success', $message);
+            return $this->redirectToRoute('app_home_index');
+
+        }
+        return $this->render('sortie/cancel.html.twig', [
+            'sortie_form' => $sortieForm->createView(),
+            'sortie' => $sortie,
+        ]);
+    }
 }

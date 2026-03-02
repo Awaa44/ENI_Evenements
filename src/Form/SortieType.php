@@ -49,7 +49,6 @@ class SortieType extends AbstractType
                 'label' => 'Description et infos :',
                 'required' => false,
             ])
-
             ->add('lieux', EntityType::class, [
                 'class' => Lieux::class,
                 'choice_label' => 'nomLieu',

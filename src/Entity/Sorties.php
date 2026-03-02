@@ -55,6 +55,9 @@ class Sorties
     #[Assert\NotBlank(message:'La sortie doit avoir une description')]
     private ?string $infosSortie = null;
 
+    #[ORM\Column(length: 350, nullable: true)]
+    private ?string $motifAnnulation = null;
+
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $urlPhoto = null;
 
@@ -68,7 +71,7 @@ class Sorties
     #[ORM\JoinColumn(nullable: false)]
     private ?Participants $organisateur = null;
 
-    #[ORM\ManyToOne(fetch: 'EAGER')]
+    #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?Etats $etats = null;
 
@@ -258,5 +261,17 @@ class Sorties
         }
         $date = clone $this->dateHeureDebut;
         return $date->modify('-5 days');
+    }
+
+    public function getMotifAnnulation(): ?string
+    {
+        return $this->motifAnnulation;
+    }
+
+    public function setMotifAnnulation(string $motifAnnulation): static
+    {
+        $this->motifAnnulation = $motifAnnulation;
+
+        return $this;
     }
 }

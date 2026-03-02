@@ -26,6 +26,7 @@ class CancelType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Sorties::class,
+            'validation_groups' => ['cancel'],
         ]);
     }
 }

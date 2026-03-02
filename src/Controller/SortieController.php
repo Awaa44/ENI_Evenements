@@ -21,6 +21,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/sortie', name: 'app_sortie')]
 final class SortieController extends AbstractController
@@ -75,10 +76,10 @@ final class SortieController extends AbstractController
         }
 
         return $this->render('sortie/edit.html.twig', [
-            'sortie_form' => $sortieForm,
+            'sortie_form' => $sortieForm->createView(),
             'sortie' => $sortie,
             'isEdit' => false,
-            'lieu_form'=> $lieu_form,
+            'lieu_form'=> $lieu_form->createView(),
         ]);
     }
 
@@ -135,11 +136,16 @@ final class SortieController extends AbstractController
         return $this->json($listLieux);
     }
 
-
+    #[IsGranted("ROLE_USER")]
     #[Route('/update/{id}', name: '_update', requirements: ['id'=> '\d+'])]
     public function updateSortie(Request $request, EntityManagerInterface $em, Sorties $sortie,
                                  EtatsRepository $etatsRepository): Response
     {
+        //vérification du role
+        if(!$this->isGranted("ROLE_ADMIN") && $this->getUser() !== $sortie->getOrganisateur()){
+            throw $this->createAccessDeniedException();
+        }
+
         $sortieForm = $this->createForm(SortieType::class, $sortie);
         $sortieForm->handleRequest($request);
 
@@ -147,7 +153,8 @@ final class SortieController extends AbstractController
         $lieu = new Lieux();
         $lieu_form = $this->createForm(LieuxType::class, $lieu);
 
-        if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
+        if ($sortieForm->isSubmitted() && $sortieForm->isValid() /*&&
+            ($this->getUser() === $sortie->getOrganisateur() || $this->isGranted('ROLE_ADMIN'))*/) {
             if ($request->request->get('creer')) {
                 //enregistrer avec l'état 'créée'
                 $etat = $etatsRepository->find(1);
@@ -169,10 +176,10 @@ final class SortieController extends AbstractController
         }
 
         return $this->render('sortie/edit.html.twig', [
-            'sortie_form' => $sortieForm,
+            'sortie_form' => $sortieForm->createView(),
             'sortie' => $sortie,
             'isEdit' => true,
-            'lieu_form'=> $lieu_form,
+            'lieu_form'=> $lieu_form->createView(),
         ]);
     }
 
@@ -180,11 +187,16 @@ final class SortieController extends AbstractController
     public function deleteSortie(Request $request, EntityManagerInterface $em, Sorties $sortie): Response
     {
 
+        //vérification du role
+        if(!$this->isGranted("ROLE_ADMIN") && $this->getUser() !== $sortie->getOrganisateur()){
+            throw $this->createAccessDeniedException();
+        }
+
         //récupération du totem de sécurité
         $token = $request->query->get('_token');
 
         if($this->isCsrfTokenValid('delete'.$sortie->getId(), $token) /*&&
-            ($this->getUser() === $sortie->getOrganisateur()->getId() || $this->isGranted('ROLE_ADMIN'))*/){
+            ($this->getUser() === $sortie->getOrganisateur() || $this->isGranted('ROLE_ADMIN'))*/){
 
             if($sortie->getEtats()->getId() === 1){
                 $em->remove($sortie);
@@ -206,10 +218,15 @@ final class SortieController extends AbstractController
         return $this->redirectToRoute('app_sortie_detail', ['id' => $sortie->getId()]);
     }
 
-    #[Route('/cancel/{id}', name: 'app_sortie_cancel', requirements: ['id'=> '\d+'], methods: ['GET','POST'])]
+    #[Route('/cancel/{id}', name: '_cancel', requirements: ['id'=> '\d+'], methods: ['GET','POST'])]
     public function canceledSortie(Request $request, EntityManagerInterface $em, Sorties $sortie,
                             EtatsRepository $etatsRepository, InscriptionsRepository $inscriptionsRepository): Response
     {
+        //vérification du role
+        if(!$this->isGranted("ROLE_ADMIN") && $this->getUser() !== $sortie->getOrganisateur()){
+            throw $this->createAccessDeniedException();
+        }
+
         $sortieForm = $this->createForm(CancelType::class, $sortie);
         $sortieForm->handleRequest($request);
 

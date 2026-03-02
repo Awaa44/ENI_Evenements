@@ -133,10 +133,23 @@ class AppFixtures extends Fixture
         for ($i = 1; $i <= 15; $i++) {
 
             $sortie = new Sorties();
+
+            // 50% de chances d'être dans le passé ou le futur
+            if (rand(0, 1)) {
+                // Date dans le futur (1 à 30 jours)
+                $dateDebut = (new \DateTime())->modify('+' . rand(1, 30) . ' days');
+            } else {
+                // Date dans le passé (1 à 30 jours)
+                $dateDebut = (new \DateTime())->modify('-' . rand(1, 30) . ' days');
+            }
+
+            // Date limite toujours AVANT la date de début
+            $dateLimite = (clone $dateDebut)->modify('-' . rand(1, 10) . ' days');
+
             $sortie->setNom($themes[array_rand($themes)] . " #$i");
-            $sortie->setDateHeureDebut((new \DateTime())->modify('+' . rand(1,30) . ' days'));
+            $sortie->setDateHeureDebut($dateDebut);
             $sortie->setDuree(rand(60,240));
-            $sortie->setDateLimiteInscription((new \DateTime())->modify('+' . rand(0,10) . ' days'));
+            $sortie->setDateLimiteInscription($dateLimite);
             $sortie->setNbInscriptionMax(rand(5,30));
             $sortie->setInfosSortie("Sortie organisée autour du thème " . $sortie->getNom());
             $sortie->setUrlPhoto(null);

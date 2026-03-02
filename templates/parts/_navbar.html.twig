@@ -18,6 +18,14 @@
                 <li class="nav-item">
                     <a class="nav-link active" href="{{ path('app_home_index') }}">Accueil</a>
                 </li>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_admin') }}">Créer un utilisateur</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_admin_list_users') }}">Listes des utilisateurs</a>
+                    </li>
+               {% endif %}
                 <li class="nav-item">
                     <a class="nav-link" href="#">#</a>
                 </li>
@@ -26,15 +34,9 @@
                 </li>
                 {# si on a un utilisateur connecté... #}
                 {% if app.user %}
-                {#{% if is_granted('IS_AUTHENTICATED') %}#}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('app_sortie_create') }}">Ajouter une sortie</a>
                     </li>
-{#                    {% if is_granted('ROLE_ADMIN') %}#}
-{#                        <li class="nav-item">#}
-{#                            <a class="nav-link" href="#">#</a>#}
-{#                        </li>#}
-{#                   {% endif %}#}
                     <li class="nav-item">
                         <a class="nav-link" aria-disabled="true">"Bonjour {{ app.user.pseudo }}"</a>
                     </li>

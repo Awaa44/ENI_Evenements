@@ -6,7 +6,7 @@
         <th scope="row">{{ data.nbInscrits~'/'~data.nbInscriptionMax }}</th>
         <th scope="row">{{ data.etat }}</th>
         <th scope="row">{{ data.inscrit }}</th>
-        <th scope="row"><a href="#">{{ data.organisateur }}</a></th>
+        <th scope="row"><a href="{{ path('app_profile_show', { id: data.idOrganisateur }) }}">{{ data.organisateur }}</a></th>
         <th scope="row">
             {% if data.etat == 'Ouverte' %}
                 <a href="#">Annuler</a>

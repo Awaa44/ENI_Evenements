@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use App\Entity\Participants;
@@ -11,7 +12,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class RegistrationType extends AbstractType
+class AdminCreateUserType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -42,7 +43,11 @@ class RegistrationType extends AbstractType
             ])
             ->add('sites', EntityType::class, [
                 'class' => Sites::class,
-                'choice_label' => 'nomSite',]);
+                'choice_label' => 'nomSite',])
+            ->add('administrateur', CheckboxType::class, [
+                'label' => 'Administrateur',
+                'required' => false,
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

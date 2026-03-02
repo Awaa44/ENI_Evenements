@@ -3,11 +3,9 @@
 {% block title %}Inscription d'une personne{% endblock %}
 
 {% block body %}
-    <h1>Register</h1>
+    <h1>Créer un utilisateur</h1>
 
-    {{ form_errors(registrationForm) }}
-
-    {{ form_start(registrationForm) }}
+    {{ form_start(registrationForm, {'attr': {'novalidate': 'novalidate', 'data-turbo': 'false'}}) }}
 
     {{ form_row(registrationForm.email) }}
     {{ form_row(registrationForm.pseudo) }}
@@ -21,7 +19,11 @@
 
     {{ form_row(registrationForm.telephone) }}
     {{ form_row(registrationForm.sites) }}
+    {{ form_row(registrationForm.administrateur) }}
 
-    <button type="submit" class="btn btn-primary">Inscrire</button>
+    <a href="{{ path('app_home_index') }}" class="btn btn-secondary">Annuler</a>
+    <button type="submit" class="btn btn-primary">Inscrire un utilisateur</button>
+    <a href="{{ path('app_admin') }}" class="btn btn-light">Créer un nouvel utilisateur</a>
+
     {{ form_end(registrationForm) }}
 {% endblock %}

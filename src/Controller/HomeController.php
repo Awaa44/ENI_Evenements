@@ -54,7 +54,7 @@ final class HomeController extends AbstractController
         $result = $inscriptionsRepository->updateInscription($idSortie,false);
         $sortie = $em->find(Sorties::class, $idSortie);
         if (!$sortie)  {
-            throw new \Exception("sortie introuvable");
+            throw new \Exception("Sortie introuvable");
         }
         else
         {
@@ -85,7 +85,7 @@ final class HomeController extends AbstractController
         $participant = $em->find(Participants::class, $idParticipant);
 
         if (!$sortie || !$participant) {
-            throw new \Exception("sortie ou participant introuvable");
+            throw new \Exception("Sortie ou participant introuvable");
         }
         $existe = $inscriptionsRepository->existsByParticipantAndSortie($idParticipant, $idSortie);
         if ($existe) {

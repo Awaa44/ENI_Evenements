@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+{% block title %}Gérer les villes{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('styles/ville/modal.css') }}">
+    <link rel="stylesheet" href="{{ asset('styles/ville/ville.css') }}">
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/ville.js') }}"></script>
+{% endblock %}
+{% block body %}
+    <h1>Gérer les villes</h1><br>
+<div>
+    <div class="filter-item">
+        <label for="inputSearch">Le nom contient : </label>
+        <input type="text" id="inputSearch" placeholder="Nom de la ville ...">
+    </div>
+</div>
+<div class="table-wrapper">
+    <table>
+        <thead>
+            <tr>
+                <th>Ville</th>
+                <th>Code postal</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="tabVille">
+        {% include 'ville/_tbody.html.twig' %}
+        </tbody>
+    </table>
+</div>
+<!-- MODAL -->
+<div id="modalEdit" class="modal">
+    <div class="modal-content">
+
+        <div class="modal-header">
+            <h2>Modifier la ville</h2>
+            <button type="button" id="closeModal" class="close-btn">&times;</button>
+        </div>
+
+        <form id="formEdit" method="POST" class="modal-form">
+            <input type="hidden" name="id" id="editId">
+
+            <div class="form-group">
+                <label>Nom de la ville</label>
+                <input type="text" name="nom" id="editNom">
+            </div>
+
+            <div class="form-group">
+                <label>Code Postal</label>
+                <input type="text" name="codePostal" id="editCodePostal">
+            </div>
+
+            <div class="modal-footer">
+                <button type="submit" class="btn-save">Sauvegarder</button>
+            </div>
+
+        </form>
+    </div>
+</div>
+{% endblock %}
+

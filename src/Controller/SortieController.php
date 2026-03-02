@@ -166,8 +166,4 @@ final class SortieController extends AbstractController
         $this->addFlash('danger', $message);
         return $this->redirectToRoute('app_sortie_detail', ['id' => $sortie->getId()]);
     }
-
-
-
-
 }

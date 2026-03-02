@@ -1,0 +1,34 @@
+{% for ville in villes %}
+    <tr>
+        <td>
+            {{ ville.nomVille }}
+        </td>
+        <td>{{ ville.codePostal }}</td>
+        <td>
+            <strong> - </strong>
+            <a href="#"
+               class="btn-modifier"
+               data-id="{{ ville.id }}"
+               data-nom="{{ ville.nomVille }}"
+               data-codepostal="{{ ville.codePostal }}">
+                Modifier
+            </a>
+            <strong> - </strong>
+            <a href="{{ path('app_ville_delete', { id: ville.id,token: csrf_token('ville_delete' ~ ville.id)}) }}"
+               onclick="return confirm('Etes vous vraiment sûre de vouloir supprimer {{ ville.nomVille }} ?')">
+                Supprimer
+            </a>
+        </td>
+    </tr>
+{% endfor %}
+<tr>
+    <td>
+        <input type="text">
+    </td>
+    <td>
+        <input type="text">
+    </td>
+    <td>
+        <strong> - </strong><a href="{{ path('app_home_index') }}">Ajouter</a>
+    </td>
+</tr>

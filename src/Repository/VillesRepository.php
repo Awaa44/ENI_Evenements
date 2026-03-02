@@ -17,13 +17,17 @@ class VillesRepository extends ServiceEntityRepository
         parent::__construct($registry, Villes::class);
     }
 
-//        public function findVille($nomVille): array
-//        {
-//            return $this->createQueryBuilder('v')
-//                ->andWhere('sorties.nom LIKE :nomSortie')
-//                ->setParameter('nomSortie', '%' . $nomVille . '%');
-//                ->getQuery()
-//                ->getOneOrNullResult()
-//            ;
-//        }
+    public function findNameVille($nomVille): array
+    {
+        return $this->createQueryBuilder('villes')
+            ->select(
+                'villes.id',
+                'villes.nomVille',
+                'villes.codePostal'
+            )
+            ->andWhere('villes.nomVille LIKE :nomVille')
+            ->setParameter('nomVille', '%' . $nomVille . '%')
+            ->getQuery()
+            ->getArrayResult();
+    }
 }

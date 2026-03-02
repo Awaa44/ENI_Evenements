@@ -25,8 +25,8 @@ class Lieux
     #[ORM\Column(nullable: true)]
     private ?float $longitude = null;
 
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\ManyToOne(inversedBy: 'lieux')]
+    #[ORM\JoinColumn(nullable: false, onDelete: "CASCADE")]
     private ?Villes $villes = null;
 
     public function getId(): ?int

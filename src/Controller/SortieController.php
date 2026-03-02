@@ -6,8 +6,11 @@ use App\Entity\Etats;
 use App\Entity\Lieux;
 use App\Entity\Sorties;
 use App\Entity\Villes;
+use App\Form\LieuxType;
 use App\Form\SortieType;
+use App\Form\CancelType;
 use App\Repository\EtatsRepository;
+use App\Repository\InscriptionsRepository;
 use App\Repository\LieuxRepository;
 use App\Repository\ParticipantsRepository;
 use App\Repository\SortiesRepository;
@@ -25,7 +28,7 @@ final class SortieController extends AbstractController
     #[Route('/{id}', name: '_detail', requirements: ['id' => '\d+'], methods: ['GET'])]
     public function afficherDetail(SortiesRepository $sortieRepository, int $id): Response
     {
-        $sortie = $sortieRepository->find($id);
+        $sortie = $sortieRepository->getSortieById($id);
 
         return $this->render('sortie/detail.html.twig', [
             'sortie' => $sortie,
@@ -34,23 +37,24 @@ final class SortieController extends AbstractController
 
     #[Route('/create', name: '_create')]
     public function createSortie(Request $request, EntityManagerInterface $em,
-                                 ParticipantsRepository $participantRepository,
-    EtatsRepository $etatsRepository): Response
+        EtatsRepository $etatsRepository): Response
     {
+        //récupération du form Sortie
         $sortie = new Sorties();
         $sortieForm = $this->createForm(SortieType::class, $sortie);
         $sortieForm->handleRequest($request);
 
-        //test à enlever
-        $participant = $participantRepository->find(1);
-        $sortie->setOrganisateur($participant);
+        //récupération du form Lieu
+        $lieu = new Lieux();
+        $lieu_form = $this->createForm(LieuxType::class, $lieu);
 
         //enregistrement de l'organisateur par défaut avec la personne connectée
-        //$sortie->setOrganisateur($this->getUser());
+        $sortie->setOrganisateur($this->getUser());
 
+        //créer la sortie en fonction du statut
         if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
             if ($request->request->get('creer')) {
-                //mettre l'état créée par défaut
+                //mettre l'état créé par défaut
                 $etat = $etatsRepository->find(1);
                 $sortie->setEtats($etat);
                 $sortie->setEtatSortie(1);
@@ -74,7 +78,36 @@ final class SortieController extends AbstractController
             'sortie_form' => $sortieForm,
             'sortie' => $sortie,
             'isEdit' => false,
+            'lieu_form'=> $lieu_form,
         ]);
+    }
+
+    //route en Ajax pour créer le lieu afin de ne pas recharger la page de création et perdre les informations déjà tapée
+    #[Route('/createLieu', name: '_create_lieu')]
+    public function createLieux(Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        $lieu = new Lieux();
+        $lieu_form = $this->createForm(LieuxType::class, $lieu);
+
+        $lieu_form->handleRequest($request);
+
+        if ($lieu_form->isSubmitted() && $lieu_form->isValid()) {
+            $em->persist($lieu);
+            $em->flush();
+
+            $message = 'Le lieu a été créé avec succès';
+
+            return $this->json([
+                'id' => $lieu->getId(),
+                'nomLieu'=> $lieu->getNomLieu(),
+                'message' => $message,
+            ]);
+        }
+        return $this->json([
+            'success' => false,
+            'errors' => 'formulaire invalide',
+        ]);
+
     }
 
     //route Ajax pour récupérer les informations du lieu et les afficher dans la page create
@@ -110,6 +143,10 @@ final class SortieController extends AbstractController
         $sortieForm = $this->createForm(SortieType::class, $sortie);
         $sortieForm->handleRequest($request);
 
+        //récupération du form Lieu
+        $lieu = new Lieux();
+        $lieu_form = $this->createForm(LieuxType::class, $lieu);
+
         if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
             if ($request->request->get('creer')) {
                 //enregistrer avec l'état 'créée'
@@ -135,11 +172,13 @@ final class SortieController extends AbstractController
             'sortie_form' => $sortieForm,
             'sortie' => $sortie,
             'isEdit' => true,
+            'lieu_form'=> $lieu_form,
         ]);
     }
 
     #[Route('/delete/{id}', name: '_delete', requirements: ['id'=> '\d+'])]
-    public function deleteSortie(Request $request, EntityManagerInterface $em, Sorties $sortie): Response {
+    public function deleteSortie(Request $request, EntityManagerInterface $em, Sorties $sortie): Response
+    {
 
         //récupération du totem de sécurité
         $token = $request->query->get('_token');
@@ -167,7 +206,42 @@ final class SortieController extends AbstractController
         return $this->redirectToRoute('app_sortie_detail', ['id' => $sortie->getId()]);
     }
 
+    #[Route('/cancel/{id}', name: 'app_sortie_cancel', requirements: ['id'=> '\d+'], methods: ['GET','POST'])]
+    public function canceledSortie(Request $request, EntityManagerInterface $em, Sorties $sortie,
+                            EtatsRepository $etatsRepository, InscriptionsRepository $inscriptionsRepository): Response
+    {
+        $sortieForm = $this->createForm(CancelType::class, $sortie);
+        $sortieForm->handleRequest($request);
 
+        if($sortieForm->isSubmitted() && $sortieForm->isValid())
+            /*&& ($this->getUser() === $sortie->getOrganisateur() || $this->isGranted('ROLE_ADMIN'))*/
+        {
+            if($sortie->getEtats()->getId() !== 2) {
+                $message = 'Impossible d\'annuler une sortie avec ce statut';
+                $this->addFlash('danger', $message);
+                return $this->redirectToRoute('app_sortie_detail', ['id' => $sortie->getId()]);
+            }
 
+            //passage automatique des inscrits à false quand une sortie est annulée
+            $inscrits = $inscriptionsRepository->findBy(['sortie' => $sortie]);
+            if($inscrits) {
+                foreach ($inscrits as $inscrit) {
+                    $inscrit->setIsInscrit(false);
+                }
+            }
+            $etat = $etatsRepository->find(6);
+            $sortie->setEtats($etat);
+            $sortie->setEtatSortie(6);
+            $em->flush();
 
+            $message = 'Votre sortie a été annulée';
+            $this->addFlash('success', $message);
+            return $this->redirectToRoute('app_home_index');
+
+        }
+        return $this->render('sortie/cancel.html.twig', [
+            'sortie_form' => $sortieForm->createView(),
+            'sortie' => $sortie,
+        ]);
+    }
 }

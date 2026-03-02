@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Sites;
 use App\Entity\Participants;
 use App\Form\AdminCreateUserType;
+use App\Form\ImportCsvType;
 use App\Repository\ParticipantsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -59,6 +61,65 @@ final class AdminController extends AbstractController
         return $this->render('admin/list-users.html.twig', [
             'participants' => $participants,
 
+        ]);
+    }
+
+    #[Route('/admin/import-csv', name: 'app_admin_import_csv')]
+    #[IsGranted('ROLE_ADMIN')]
+    public function importCSV(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
+    {
+        // On crée le formulaire avec juste le champ fichier CSV
+        $form = $this->createForm(ImportCsvType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // On récupère le fichier uploadé
+            $csvFile = $form->get('csvFile')->getData();
+
+            if ($csvFile) {
+                // On lit le fichier et on découpe chaque ligne aux virgules
+                $csvData = array_map('str_getcsv', file($csvFile->getPathname()));
+                // On récupère et enlève la première ligne (les titres)
+                $header = array_shift($csvData);
+
+                // On boucle sur chaque ligne de données
+                foreach ($csvData as $row) {
+                    // On associe les titres avec les valeurs -> $data['email'], $data['pseudo']...
+                    $data = array_combine($header, $row);
+
+                    // On cherche le site en base de données par son nom
+                    $site = $entityManager->getRepository(Sites::class)->findOneBy(['nomSite' => $data['site']]);
+
+                    // Si le site n'existe pas, on affiche une erreur et on passe à la ligne suivante
+                    if (!$site) {
+                        $this->addFlash('danger', "Le site " . $data['site'] . " n'existe pas.");
+                        continue;
+                    }
+
+                    $participant = new Participants();
+                    $participant->setEmail($data['email']);
+                    $participant->setPseudo($data['pseudo']);
+                    $participant->setNom($data['nom']);
+                    $participant->setPrenom($data['prenom']);
+                    $participant->setTelephone($data['telephone'] ?? null);
+                    $participant->setSites($site);
+                    $participant->setRoles(['ROLE_USER']);
+                    $participant->setActif(true);
+                    $participant->setAdministrateur(false);
+                    $participant->setPassword(
+                        $userPasswordHasher->hashPassword($participant, $data['password'])
+                    );
+
+                    $entityManager->persist($participant);
+                }
+                $entityManager->flush();
+                $this->addFlash('success', 'Utilisateurs importés avec succès !');
+                return $this->redirectToRoute('app_admin_import_csv');
+            }
+
+        }
+        return $this->render('admin/import-csv.html.twig', [
+            'importForm' => $form->createView(),
         ]);
     }
 }

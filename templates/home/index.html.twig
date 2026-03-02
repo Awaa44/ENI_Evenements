@@ -1,16 +1,16 @@
 {% extends 'base.html.twig' %}
-{% block page_js %}
+{#{% block page_js %}
     <script src="{{ asset('js/home.js') }}"></script>
-{% endblock %}
+{% endblock %}#}
 {% block title %}Home!{% endblock %}
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('styles/home.css') }}">
 {% endblock %}
-{#{% block javascripts %}#}
-{#    {{ parent() }}#}
-{#    <script src="{{ asset('js/home.js') }}"></script>#}
-{#{% endblock %}#}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/home.js') }}"></script>
+{% endblock %}
 {% block body %}
 <div>
     <div class="div_info_user">

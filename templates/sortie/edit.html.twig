@@ -16,7 +16,7 @@
         <h2 class="text-center p-2">Créer une sortie</h2>
     {% endif %}
     <div class="row justify-content-center">
-        <div class="col-12 col-md-6">
+        <div class="col-12 col-md-8">
 
             {{ form_start(sortie_form) }}
             {{ form_errors(sortie_form) }}
@@ -68,66 +68,18 @@
                         <option value="">--Sélectionner un lieu--</option>
                     </select>
                 </div>
-                <a href="{{ path('app_sortie_create_lieu') }}" target="_blank">Créer un lieu</a>
+                {{ form_errors(sortie_form.lieux) }}
+                <br>
+
                 <!-- Bouton déclencheur -->
-                <button type="button" data-bs-toggle="modal" data-bs-target="#maPopin">
+                <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#maPopin">
                     Ajouter un lieu
                 </button>
 
-
-                <script>
-                    document.getElementById('sortie_villes').addEventListener('change', function() {
-                        const villeId = this.value;
-                        if (villeId) {
-                            document.getElementById('lieu-select').innerHTML = '';
-                            const defaultOption = document.createElement('option');
-                            defaultOption.value = '';
-                            defaultOption.textContent = '--Sélectionner un lieu--';
-                            document.getElementById('lieu-select').appendChild(defaultOption);
-                            //appel de la route ajax créée dans le controller
-                            fetch(`/sortie/ville/${villeId}`)
-                                .then(response => response.json())
-                                .then(data => {
-                                    //récupération des informations
-                                    for (const datum of data) {
-                                        const option = document.createElement('option');
-                                        option.value = datum.idLieux;
-                                        option.textContent = datum.nomLieux;
-                                        document.getElementById('lieu-select').appendChild(option);
-                                    }
-                                });
-                        } else {
-                            document.getElementById('lieu-select').innerHTML = '';
-                        }
-                    });
-                </script>
-                {{ form_errors(sortie_form.lieux) }}
             </div>
             <br>
             <p class="card-body pt-0">Rue : <span id="lieu-rue"></span></p>
             <p class="card-body pt-0">Code postal : <span id="lieu-cp"></span></p>
-            <script>
-                document.getElementById('lieu-select').addEventListener('change', function() {
-                    const lieuId = this.value;
-                    if (lieuId) {
-                        //compléter le champ lieu avec le select-lieu custom
-                        document.getElementById('sortie_lieux').value = lieuId;
-                        //appel de la route ajax créée dans le controller
-                        fetch(`/sortie/lieu/${lieuId}`)
-                            .then(response => response.json())
-                            .then(data => {
-                                //récupération des informations
-                                document.getElementById('lieu-rue').textContent = data.rue;
-                                document.getElementById('lieu-cp').textContent = data.codePostal;
-                            });
-                    } else {
-                        document.getElementById('lieu-rue').textContent = '';
-                        document.getElementById('lieu-cp').textContent = '';
-                    }
-                });
-            </script>
-
-
             <br>
             <div class="text-center">
                 <button type="submit" class="btn btn-primary" value="creer" name="creer">
@@ -157,7 +109,7 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                         </div>
                         <div class="modal-body">
-                            {{ form_start(lieu_form) }}
+                            {{ form_start(lieu_form, {'attr': {'data-turbo': 'false', 'data-turbo-stream': 'false'}}) }}
 
                             {{ form_label(lieu_form.nomLieu) }}
                             {{ form_widget(lieu_form.nomLieu) }}
@@ -177,14 +129,24 @@
                                     Enregistrer
                                 </button>
                             </div>
-
                             {{ form_end(lieu_form) }}
-                        </div>
 
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <br>
+    <script type="module">
+        import { initVilleSelect, initLieuSelect, initLieuForm } from '{{ asset('js/sortie.js') }}';
+
+        initVilleSelect();
+        initLieuSelect();
+        initLieuForm();
+        {% if isEdit %}
+        initEditMode({{ sortie.lieux.villes.id }}, {{ sortie.lieux.id }});
+        {% endif %}
+
+    </script>
 {% endblock %}

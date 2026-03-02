@@ -37,30 +37,22 @@ final class SortieController extends AbstractController
     public function createSortie(Request $request, EntityManagerInterface $em,
         EtatsRepository $etatsRepository): Response
     {
+        //récupération du form Sortie
         $sortie = new Sorties();
         $sortieForm = $this->createForm(SortieType::class, $sortie);
         $sortieForm->handleRequest($request);
 
+        //récupération du form Lieu
         $lieu = new Lieux();
         $lieu_form = $this->createForm(LieuxType::class, $lieu);
-        $lieu_form->handleRequest($request);
 
         //enregistrement de l'organisateur par défaut avec la personne connectée
         $sortie->setOrganisateur($this->getUser());
 
-        //créer lieux
-        if ($lieu_form->isSubmitted() && $lieu_form->isValid()) {
-            if ($request->request->get('creerLieu')){
-                $em->persist($lieu);
-                $em->flush();
-                return $this->redirectToRoute('app_sortie_create');
-            }
-        }
-
         //créer la sortie en fonction du statut
         if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
             if ($request->request->get('creer')) {
-                //mettre l'état créée par défaut
+                //mettre l'état créé par défaut
                 $etat = $etatsRepository->find(1);
                 $sortie->setEtats($etat);
                 $sortie->setEtatSortie(1);
@@ -88,8 +80,9 @@ final class SortieController extends AbstractController
         ]);
     }
 
+    //route en Ajax pour créer le lieu afin de ne pas recharger la page de création et perdre les informations déjà tapée
     #[Route('/createLieu', name: '_create_lieu')]
-    public function createLieux(Request $request, EntityManagerInterface $em): Response
+    public function createLieux(Request $request, EntityManagerInterface $em): JsonResponse
     {
         $lieu = new Lieux();
         $lieu_form = $this->createForm(LieuxType::class, $lieu);
@@ -101,14 +94,18 @@ final class SortieController extends AbstractController
             $em->flush();
 
             $message = 'Le lieu a été créé avec succès';
-            $this->addFlash('success', $message);
 
-            return $this->redirectToRoute('app_sortie_create');
+            return $this->json([
+                'id' => $lieu->getId(),
+                'nomLieu'=> $lieu->getNomLieu(),
+                'message' => $message,
+            ]);
         }
-
-        return $this->render('lieu/edit.html.twig', [
-            'lieu_form'=> $lieu_form,
+        return $this->json([
+            'success' => false,
+            'errors' => 'formulaire invalide',
         ]);
+
     }
 
     //route Ajax pour récupérer les informations du lieu et les afficher dans la page create
@@ -144,6 +141,10 @@ final class SortieController extends AbstractController
         $sortieForm = $this->createForm(SortieType::class, $sortie);
         $sortieForm->handleRequest($request);
 
+        //récupération du form Lieu
+        $lieu = new Lieux();
+        $lieu_form = $this->createForm(LieuxType::class, $lieu);
+
         if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
             if ($request->request->get('creer')) {
                 //enregistrer avec l'état 'créée'
@@ -169,6 +170,7 @@ final class SortieController extends AbstractController
             'sortie_form' => $sortieForm,
             'sortie' => $sortie,
             'isEdit' => true,
+            'lieu_form'=> $lieu_form,
         ]);
     }
 
@@ -203,8 +205,7 @@ final class SortieController extends AbstractController
     }
 
     #[Route('/update-cancel/{id}', name: '_update_cancel', requirements: ['id'=> '\d+'])]
-    public function updateCancelSortie(Request $request, EntityManagerInterface $em, Sorties $sortie,
-                                 EtatsRepository $etatsRepository): Response
+    public function updateCancelSortie(Request $request, Sorties $sortie): Response
     {
         $sortieForm = $this->createForm(SortieType::class, $sortie);
         $sortieForm->handleRequest($request);
@@ -237,12 +238,12 @@ final class SortieController extends AbstractController
                 $this->addFlash('success', $message);
                 return $this->redirectToRoute('app_home_index');
             } else {
-                $message = 'Impossible de supprimer une sortie avec ce statut';
+                $message = 'Impossible d\'annuler une sortie avec ce statut';
                 $this->addFlash('danger', $message);
                 return $this->redirectToRoute('app_sortie_detail', ['id' => $sortie->getId()]);
             }
         }
-        $message = 'Impossible de supprimer votre sortie';
+        $message = 'Impossible d\'annuler une sortie avec ce statut';
         $this->addFlash('danger', $message);
         return $this->redirectToRoute('app_sortie_detail', ['id' => $sortie->getId()]);
     }

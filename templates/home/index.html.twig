@@ -7,10 +7,10 @@
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('styles/home.css') }}">
 {% endblock %}
-{% block javascripts %}
-    {{ parent() }}
-    <script src="{{ asset('js/home.js') }}"></script>
-{% endblock %}
+{#{% block javascripts %}#}
+{#    {{ parent() }}#}
+{#    <script src="{{ asset('js/home.js') }}"></script>#}
+{#{% endblock %}#}
 {% block body %}
 <div>
     <div class="div_info_user">
@@ -58,19 +58,25 @@
         </div>
 
     </div>
-    <table>
-        <thead>
+    <div class="table-wrapper">
+        <table>
+            <thead>
             {% include 'home/_thead.html.twig' %}
-        </thead>
-        <tbody id="tabHome">
+            </thead>
+            <tbody id="tabHome">
             {% include 'home/_tbody.html.twig' %}
-        </tbody>
-    </table>
-    <div class="btn-container">
-        <a href="{{ path('app_sortie_create') }}" class="btn btn-dark">
-            Créer une sortie
-        </a>
+            </tbody>
+        </table>
+{#        <div class="pagination-container">#}
+{#            {{ knp_pagination_render(tableau) }}#}
+{#        </div>#}
+
+        <div class="btn-container">
+            <a href="{{ path('app_sortie_create') }}" class="btn btn-dark">
+                Créer une sortie
+            </a>
+        </div>
     </div>
-</div><br>
+</div>
 {% endblock %}
 

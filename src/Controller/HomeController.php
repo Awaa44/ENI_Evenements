@@ -13,6 +13,7 @@ use App\Repository\SortiesRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\OptimisticLockException;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,7 +23,12 @@ use Symfony\Component\Routing\Attribute\Route;
 final class HomeController extends AbstractController
 {
     #[Route('/index', name: '_index')]
-    public function index(SitesRepository $sitesRepository, SortiesRepository $sortieRepository): Response
+    public function index(
+        SitesRepository $sitesRepository,
+        SortiesRepository $sortieRepository,
+        PaginatorInterface $paginator,
+        Request $request
+    ): Response
     {
         //Liste des sites
         $sites = $sitesRepository->findAll();
@@ -34,7 +40,13 @@ final class HomeController extends AbstractController
         $idParticipant = $user->getId();
         //Tableau
         $tableau = $sortieRepository->getSortiesHome($idParticipant);
-
+//        $tableauQuery = $sortieRepository->getSortiesHome($idParticipant);
+//
+//        $tableau = $paginator->paginate(
+//            $tableauQuery,
+//            $request->query->getInt('page', 1),
+//            10
+//        );
         // Mise en session  de la requete
 //        $request->getSession()->set('tableau', $tableau);
 

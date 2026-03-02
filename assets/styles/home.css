@@ -82,3 +82,15 @@ th, td {
     justify-content: flex-end;
     gap: 20px;
 }
+
+.table-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.btn-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+    padding-right: 10px;
+}

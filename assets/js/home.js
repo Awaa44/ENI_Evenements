@@ -1,5 +1,11 @@
-document.addEventListener("DOMContentLoaded", function () {
 
+
+
+
+document.addEventListener("turbo:load", initHome);
+
+function initHome()
+{
     const cbInscrit = document.getElementById("filtreInscrit");
     const cbNonInscrit = document.getElementById("filtreNonInscrit");
 
@@ -44,8 +50,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 document.getElementById("tabHome").innerHTML = html;
             });
     }
-
-    // 🔥 Gestion exclusivité inscrit / nonInscrit
+    // Gestion exclusivité inscrit / nonInscrit
     cbInscrit.addEventListener("change", function () {
         if (this.checked) {
             cbNonInscrit.checked = false;
@@ -79,4 +84,4 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("filtrePassees")
         .addEventListener("change", appliquerFiltres);
 
-});
+}

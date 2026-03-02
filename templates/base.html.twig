@@ -1,57 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="">
     <head>
         <meta charset="UTF-8">
         <title>{% block title %}Eni-Evènements!{% endblock %}</title>
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
         {% block stylesheets %}
-            <style>
-                table {
-                    border-collapse: collapse;
-                    border: 2px solid black;
-                    font-family: sans-serif;
-                    font-size: 0.8rem;
-                    letter-spacing: 1px;
-                }
-
-                caption {
-                    caption-side: bottom;
-                    padding: 10px;
-                    font-weight: bold;
-                }
-
-                thead,
-                tfoot {
-                    background-color: rgb(228 240 245);
-                }
-
-                th,
-                td {
-                    border: 1px solid black;
-                    padding: 8px 10px;
-                }
-
-                td:last-of-type {
-                    text-align: center;
-                }
-
-                tbody > tr:nth-of-type(even) {
-                    background-color: white;
-                }
-
-                tfoot th {
-                    text-align: right;
-                }
-
-                tfoot td {
-                    font-weight: bold;
-                }
-            </style>
-        {% endblock %}
-
-        {% block javascripts %}
-            {% block importmap %}{{ importmap('app') }}{% endblock %}
-            {% block page_js %}{% endblock %}
         {% endblock %}
     </head>
     <body>
@@ -73,4 +26,7 @@
     {# FOOTER #}
     {% include 'parts/_footer.html.twig' %}
     </body>
+    {% block javascripts %}
+        {% block importmap %}{{ importmap('app') }}{% endblock %}
+    {% endblock %}
 </html>

@@ -19,13 +19,13 @@
                 <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
             </div>
             <div class="text-center">
+                <a class="btn btn-secondary" href="{{ path('app_sortie_detail', {id: sortie.id}) }}">
+                    Annuler la demande
+                </a>
                 <a href="{{ path('app_sortie_cancel', {id: sortie.id, _token: csrf_token('cancel' ~ sortie.id)}) }}"
                    class="btn btn-danger"
                    onclick="return confirm('Etes-vous sûr de vouloir annuler cette sortie ?')"
                 >Annuler la sortie</a>
-                <a class="btn btn-secondary" href="{{ path('app_sortie_detail', {id: sortie.id}) }}">
-                    Annuler la demande
-                </a>
             </div>
         </div>
     </div>

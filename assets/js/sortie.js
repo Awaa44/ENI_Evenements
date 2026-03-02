@@ -93,3 +93,30 @@ export function initLieuForm() {
             });
     });
 }
+
+export function initEditMode(villeId, lieuId) {
+    // 1. sélectionner la ville
+    document.getElementById('sortie_villes').value = villeId;
+
+    // 2. peupler le select avec les lieux de cette ville
+    fetch(`/sortie/ville/${villeId}`)
+        .then(response => response.json())
+        .then(lieux => {
+            document.getElementById('lieu-select').innerHTML = '';
+            const defaultOption = document.createElement('option');
+            defaultOption.value = '';
+            defaultOption.textContent = '--Sélectionner un lieu--';
+            document.getElementById('lieu-select').appendChild(defaultOption);
+
+            for (const datum of lieux) {
+                const option = document.createElement('option');
+                option.value = datum.idLieux;
+                option.textContent = datum.nomLieux;
+                document.getElementById('lieu-select').appendChild(option);
+            }
+
+            // 3. sélectionner le bon lieu et déclencher le change pour rue/cp
+            document.getElementById('lieu-select').value = lieuId;
+            document.getElementById('lieu-select').dispatchEvent(new Event('change'));
+        });
+}

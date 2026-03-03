@@ -6,7 +6,7 @@
         <td>{{ data.nbInscrits~'/'~data.nbInscriptionMax }}</td>
         <td>{{ data.etat }}</td>
         <td>{{ data.inscrit }}</td>
-        <td><a href="#">{{ data.organisateur }}</a></td>
+        <td><a href="{{ path('app_profile_show', { id: data.idOrganisateur}) }}">{{ data.organisateur }}</a></td>
         <td>
             {% if data.etat == 'Ouverte' %}
                 <strong> - </strong><a href="{{ path('app_sortie_cancel', { id: data.id}) }}">Annuler</a>

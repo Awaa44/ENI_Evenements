@@ -1,0 +1,80 @@
+<?php
+
+namespace App\Controller;
+
+use App\Entity\Sites;
+use App\Form\SiteType;
+use App\Repository\SitesRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
+
+#[Route('/site', name: 'app_site')]
+final class SiteController extends AbstractController
+{
+    #[Route('/detail', name: '_detail', methods: ['GET','POST'])]
+    public function detail(Request $request, SitesRepository $sitesRepository, EntityManagerInterface $em): Response
+    {
+        //récupérer la liste des sites
+        $sites = $sitesRepository->findAll();
+
+        //créer un site
+        $site = new Sites();
+        $siteForm = $this->createForm(SiteType::class, $site);
+        $siteForm->handleRequest($request);
+
+        if($siteForm->isSubmitted() && $siteForm->isValid()) {
+            $em->persist($site);
+            $em->flush();
+
+            return $this->redirectToRoute('app_site_detail');
+        }
+
+        return $this->render('site/edit.html.twig', [
+            'site' => $site,
+            'site_form' => $siteForm,
+            'sites' => $sites,
+        ]);
+    }
+
+    #[Route('/update/{id}', name: '_update', requirements: ['id'=> '\d+'], methods: ['POST'])]
+    public function updateSite(Request $request, EntityManagerInterface $em, Sites $site): Response
+    {
+        $siteForm = $this->createForm(SiteType::class, $site);
+        $siteForm->handleRequest($request);
+
+        if($siteForm->isSubmitted() && $siteForm->isValid()) {
+            $em->persist($site);
+            $em->flush();
+
+            return $this->redirectToRoute('app_site_detail');
+        }
+
+        $message = 'Impossible de modifier le site';
+        $this->addFlash('danger', $message);
+        return $this->redirectToRoute('app_site_detail');
+    }
+
+    #[Route('/delete/{id}', name: '_delete', requirements: ['id'=> '\d+'])]
+    public function deleteSite(Request $request, Sites $site, EntityManagerInterface $em): Response
+    {
+        $token = $request->query->get('_token');
+
+        if($this->isCsrfTokenValid('delete'.$site->getId(), $token)) {
+            $em->remove($site);
+            $em->flush();
+
+            $message = 'Votre site a été supprimé';
+            $this->addFlash('success', $message);
+            return $this->redirectToRoute('app_site_detail');
+
+        }
+
+        $message = 'Impossible de suppriemr le site';
+        $this->addFlash('danger', $message);
+        return $this->redirectToRoute('app_site_detail');
+    }
+}

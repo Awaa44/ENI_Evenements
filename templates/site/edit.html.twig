@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} {{ parent() }} | Gestion des sites {% endblock %}
+
+{% block body %}
+
+    <h2 class="text-center p-3">Gérer les sites</h2>
+
+    {{ form_start(site_form, {'attr': {'data-turbo': 'false'}}) }}
+    <table class="table">
+        <thead class="thead-dark">
+                <tr>
+                    <th>Nom du site</th>
+                    <th>Action</th>
+                </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    {{ form_widget(site_form.nomSite) }}
+                    {{ form_errors(site_form.nomSite) }}
+                </td>
+                <td>
+                    <button class="btn btn-primary" type="submit">
+                        Ajouter
+                    </button>
+                </td>
+            </tr>
+            {% for site in sites %}
+                <tr>
+                    <td>
+                        {{ site.nomSite }}
+                    </td>
+                    <td>
+                        <a href="{{ path('app_site_update', {id : site.id}) }}"
+                        class="btn btn-warning"
+                        >Modifier</a>
+                        <a href="{{ path('app_site_delete', {id: site.id, _token: csrf_token('delete' ~ site.id)}) }}"
+                              class="btn btn-danger"
+                              onclick="return confirm('Etes-vous sûr de vouloir supprimer ce site ?')"
+                        >Supprimer
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {{ form_end(site_form) }}
+
+{% endblock %}

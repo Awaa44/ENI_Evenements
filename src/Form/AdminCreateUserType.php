@@ -18,28 +18,28 @@ class AdminCreateUserType extends AbstractType
     {
         $builder
             ->add('email', TextType::class, [
-                'label' => 'Email',
+                'label' => 'Email :',
                 'required' => true,
             ])
             ->add('pseudo', TextType::class, [
-                'label' => 'Pseudo',
+                'label' => 'Pseudo :',
                 'required' => true,
             ])
             ->add('nom', TextType::class, [
-                'label' => 'Nom',
+                'label' => 'Nom :',
                 'required' => true,
             ])
             ->add('prenom', TextType::class, [
-                'label' => 'Prénom',
+                'label' => 'Prénom :',
                 'required' => true,
             ])
             ->add('telephone', TextType::class, [
-                'label' => 'Téléphone',
+                'label' => 'Téléphone :',
                 'required' => false,
             ])
             ->add('plainPassword', PasswordType::class, [
                 'mapped' => false,
-                'label' => 'Mot de passe',
+                'label' => 'Mot de passe :',
             ])
             ->add('sites', EntityType::class, [
                 'class' => Sites::class,

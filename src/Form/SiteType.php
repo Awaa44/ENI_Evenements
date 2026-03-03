@@ -15,6 +15,7 @@ class SiteType extends AbstractType
         $builder
             ->add('nomSite', TextType::class, [
                 'label' => false,
+                'required' => false,
             ])
         ;
     }

@@ -27,10 +27,11 @@ final class SiteController extends AbstractController
         $siteForm->handleRequest($request);
 
         if($siteForm->isSubmitted() && $siteForm->isValid()) {
-            $em->persist($site);
-            $em->flush();
-
-            return $this->redirectToRoute('app_site_detail');
+            if ($request->request->get('create')) {
+                $em->persist($site);
+                $em->flush();
+                return $this->redirectToRoute('app_site_detail');
+            }
         }
 
         return $this->render('site/edit.html.twig', [
@@ -43,18 +44,17 @@ final class SiteController extends AbstractController
     #[Route('/update/{id}', name: '_update', requirements: ['id'=> '\d+'], methods: ['POST'])]
     public function updateSite(Request $request, EntityManagerInterface $em, Sites $site): Response
     {
-        $siteForm = $this->createForm(SiteType::class, $site);
-        $siteForm->handleRequest($request);
-
-        if($siteForm->isSubmitted() && $siteForm->isValid()) {
+        $nomSite = $request->request->get('nomSite');
+        if ($request->request->get('update')) {
+            $site->setNomSite($nomSite);
             $em->persist($site);
             $em->flush();
 
+            $this->addFlash('success', 'Le site a été modifié');
             return $this->redirectToRoute('app_site_detail');
         }
 
-        $message = 'Impossible de modifier le site';
-        $this->addFlash('danger', $message);
+        $this->addFlash('danger', 'Impossible de modifier le site');
         return $this->redirectToRoute('app_site_detail');
     }
 

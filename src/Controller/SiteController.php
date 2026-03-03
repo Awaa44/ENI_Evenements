@@ -49,17 +49,12 @@ final class SiteController extends AbstractController
     }
 
     #[Route('/update/{id}', name: '_update', requirements: ['id'=> '\d+'], methods: ['POST'])]
-    public function updateSite(Request $request, EntityManagerInterface $em, Sites $site,
-                               ParticipantsRepository $participantsRepository): Response
+    public function updateSite(Request $request, EntityManagerInterface $em, Sites $site): Response
     {
         $nomSite = $request->request->get('nomSite');
 
         if ($request->request->get('update')) {
-            //vérifier si participant lié au site
-            if(!$site->getParticipants()->isEmpty()){
-                $this->addFlash('danger', 'Impossible de modifier le site tant que des participants y sont liés');
-                return $this->redirectToRoute('app_site_detail');
-            }
+
             $site->setNomSite($nomSite);
             $em->persist($site);
             $em->flush();
@@ -73,7 +68,7 @@ final class SiteController extends AbstractController
     }
 
     #[Route('/delete/{id}', name: '_delete', requirements: ['id'=> '\d+'])]
-    public function deleteSite(Request $request, Sites $site, ParticipantsRepository $participantsRepository,
+    public function deleteSite(Request $request, Sites $site,
                                EntityManagerInterface $em): Response
     {
         $token = $request->query->get('_token');

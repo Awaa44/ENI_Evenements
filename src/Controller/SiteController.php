@@ -11,15 +11,19 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+use function PHPUnit\Framework\isEmpty;
 
+#[IsGranted("ROLE_ADMIN")]
 #[Route('/site', name: 'app_site')]
 final class SiteController extends AbstractController
 {
     #[Route('/detail', name: '_detail', methods: ['GET','POST'])]
-    public function detail(Request $request, SitesRepository $sitesRepository, EntityManagerInterface $em): Response
+    public function detail(Request $request, SitesRepository $sitesRepository,
+                           ParticipantsRepository $participantsRepository, EntityManagerInterface $em): Response
     {
-        //récupérer la liste des sites
-        $sites = $sitesRepository->findAll();
+        //récupérer la liste des sites par ordre alphabétique
+        $sites = $sitesRepository->findBy([], ['nomSite' => 'ASC']);
 
         //créer un site
         $site = new Sites();
@@ -30,6 +34,9 @@ final class SiteController extends AbstractController
             if ($request->request->get('create')) {
                 $em->persist($site);
                 $em->flush();
+
+                $message = "{$site->getNomSite()} a été ajouté avec succès";
+                $this->addFlash('success', $message);
                 return $this->redirectToRoute('app_site_detail');
             }
         }
@@ -46,12 +53,10 @@ final class SiteController extends AbstractController
                                ParticipantsRepository $participantsRepository): Response
     {
         $nomSite = $request->request->get('nomSite');
-        $countParticipant = $participantsRepository->count(['sites' => $site]);
 
         if ($request->request->get('update')) {
-
             //vérifier si participant lié au site
-            if($countParticipant > 0){
+            if(!$site->getParticipants()->isEmpty()){
                 $this->addFlash('danger', 'Impossible de modifier le site tant que des participants y sont liés');
                 return $this->redirectToRoute('app_site_detail');
             }
@@ -72,12 +77,11 @@ final class SiteController extends AbstractController
                                EntityManagerInterface $em): Response
     {
         $token = $request->query->get('_token');
-        $countParticipant = $participantsRepository->count(['sites' => $site]);
 
         if($this->isCsrfTokenValid('delete'.$site->getId(), $token)) {
 
-            //vérifier si participant associé au site
-            if($countParticipant >0) {
+            //vérifier si participant lié au site
+            if(!$site->getParticipants()->isEmpty()){
                 $this->addFlash('danger', 'Impossible de supprimer le site tant que des participants y sont liés');
                 return $this->redirectToRoute('app_site_detail');
             }

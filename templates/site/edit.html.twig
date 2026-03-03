@@ -11,12 +11,13 @@
         <thead class="thead-dark">
                 <tr>
                     <th>Nom du site</th>
+                    <th>Nombre de participants</th>
                     <th>Action</th>
                 </tr>
         </thead>
         <tbody>
             <tr>
-                <td>
+                <td colspan="2">
                     {{ form_widget(site_form.nomSite) }}
                     {{ form_errors(site_form.nomSite) }}
                 </td>
@@ -49,6 +50,9 @@
                         </form>
                     </td>
                     <td>
+                        <span>{{ site.participants.count }}</span>
+                    </td>
+                    <td>
                         <button type="button"
                             class="btn btn-warning"
                             onclick="document.getElementById('nom-{{ site.id }}').classList.add('d-none');
@@ -67,6 +71,5 @@
             {% endfor %}
         </tbody>
     </table>
-
 
 {% endblock %}

@@ -81,7 +81,7 @@ class Participants implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Sorties::class, mappedBy: 'organisateur', orphanRemoval: true)]
     private Collection $sorties;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(inversedBy: 'participants')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Sites $sites = null;
 

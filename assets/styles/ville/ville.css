@@ -1,0 +1,91 @@
+
+h2 {
+    margin-bottom: 20px;
+}
+
+/* TABLEAU */
+.table-container {
+    margin-top: 20px;
+}
+
+table, th, td {
+    border: 2px solid black;
+}
+
+th, td {
+    padding: 8px;
+    text-align: left;
+    border: 2px solid black;
+}
+.filters-container {
+    display: flex;
+    align-items: flex-start;
+    gap: 30px;
+    flex-wrap: wrap; /* IMPORTANT pour responsive */
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+/* Chaque bloc */
+.filter-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 220px;
+    width: 200px;
+    margin-bottom: 10px;
+}
+
+/* Inputs */
+.filter-item select,
+.filter-item input {
+    padding: 8px 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+/* Dates */
+.date-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.date-group input {
+    min-width: 140px;
+}
+
+/* Checkboxes */
+.filter-checkboxes {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* Responsive Mobile */
+@media (max-width: 900px) {
+    .filters-container {
+        flex-direction: column;
+    }
+}
+.div_info_user {
+    display: flex;
+    justify-content: flex-end;
+    gap: 20px;
+}
+
+.table-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.btn-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+    padding-right: 10px;
+}
+

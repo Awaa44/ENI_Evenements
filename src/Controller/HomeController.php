@@ -138,7 +138,6 @@ final class HomeController extends AbstractController
             'passees'   => $request->query->get('passees'),
         ];
         $tableau = $sortiesRepository->getSortiesHome($idParticipant, $filtres);
-        //dd($tableau);
 
         return $this->render('home/_tbody.html.twig', [
             'tableau' => $tableau

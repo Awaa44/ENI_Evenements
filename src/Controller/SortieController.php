@@ -206,7 +206,7 @@ final class SortieController extends AbstractController
         return $this->redirectToRoute('app_sortie_detail', ['id' => $sortie->getId()]);
     }
 
-    #[Route('/cancel/{id}', name: 'app_sortie_cancel', requirements: ['id'=> '\d+'], methods: ['GET','POST'])]
+    #[Route('/cancel/{id}', name: '_cancel', requirements: ['id'=> '\d+'], methods: ['GET','POST'])]
     public function canceledSortie(Request $request, EntityManagerInterface $em, Sorties $sortie,
                             EtatsRepository $etatsRepository, InscriptionsRepository $inscriptionsRepository): Response
     {

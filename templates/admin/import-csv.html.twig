@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Importer un fichier CSV{% endblock %}
+
+{% block body %}
+    <div class="container mt-4 mb-5 pb-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <h2 class="text-center mb-4">Importer un fichier CSV</h2>
+
+                        {{ form_start(importForm, {'attr': {'novalidate': 'novalidate', 'data-turbo': 'false'}}) }}
+
+                        {{ form_row(importForm.csvFile) }}
+
+                        <div class="d-flex justify-content-center gap-3 mt-3">
+                            <a href="{{ path('app_home_index') }}" class="btn btn-secondary">Annuler</a>
+                            <button type="submit" class="btn btn-primary">Importer</button>
+                        </div>
+
+                        {{ form_end(importForm) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

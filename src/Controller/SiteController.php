@@ -4,10 +4,10 @@ namespace App\Controller;
 
 use App\Entity\Sites;
 use App\Form\SiteType;
+use App\Repository\ParticipantsRepository;
 use App\Repository\SitesRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -42,10 +42,19 @@ final class SiteController extends AbstractController
     }
 
     #[Route('/update/{id}', name: '_update', requirements: ['id'=> '\d+'], methods: ['POST'])]
-    public function updateSite(Request $request, EntityManagerInterface $em, Sites $site): Response
+    public function updateSite(Request $request, EntityManagerInterface $em, Sites $site,
+                               ParticipantsRepository $participantsRepository): Response
     {
         $nomSite = $request->request->get('nomSite');
+        $countParticipant = $participantsRepository->count(['sites' => $site]);
+
         if ($request->request->get('update')) {
+
+            //vérifier si participant lié au site
+            if($countParticipant > 0){
+                $this->addFlash('danger', 'Impossible de modifier le site tant que des participants y sont liés');
+                return $this->redirectToRoute('app_site_detail');
+            }
             $site->setNomSite($nomSite);
             $em->persist($site);
             $em->flush();
@@ -59,11 +68,20 @@ final class SiteController extends AbstractController
     }
 
     #[Route('/delete/{id}', name: '_delete', requirements: ['id'=> '\d+'])]
-    public function deleteSite(Request $request, Sites $site, EntityManagerInterface $em): Response
+    public function deleteSite(Request $request, Sites $site, ParticipantsRepository $participantsRepository,
+                               EntityManagerInterface $em): Response
     {
         $token = $request->query->get('_token');
+        $countParticipant = $participantsRepository->count(['sites' => $site]);
 
         if($this->isCsrfTokenValid('delete'.$site->getId(), $token)) {
+
+            //vérifier si participant associé au site
+            if($countParticipant >0) {
+                $this->addFlash('danger', 'Impossible de supprimer le site tant que des participants y sont liés');
+                return $this->redirectToRoute('app_site_detail');
+            }
+
             $em->remove($site);
             $em->flush();
 
@@ -73,7 +91,7 @@ final class SiteController extends AbstractController
 
         }
 
-        $message = 'Impossible de suppriemr le site';
+        $message = 'Impossible de supprimer le site';
         $this->addFlash('danger', $message);
         return $this->redirectToRoute('app_site_detail');
     }

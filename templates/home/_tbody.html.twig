@@ -9,7 +9,7 @@
         <td><a href="{{ path('app_profile_show', { id: data.idOrganisateur }) }}">{{ data.organisateur }}</a></td>
         <td>
             {% if data.etat == 'Ouverte' %}
-                <strong> - </strong><a href="#">Annuler</a>
+                <strong> - </strong><a href="{{ path('app_sortie_cancel', { id: data.id}) }}">Annuler</a>
                 {% if data.inscrit != 'X' and data.dateLimiteInscription > date()  %}
                     <strong> - </strong><a href="{{ path('app_home_inscrire', { idSortie: data.id}) }}"
                        onclick="return confirm('Etes vous vraiment sûr de vouloir vous inscrire a cette sortie : {{ data.nom }} ?')">

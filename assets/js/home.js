@@ -1,7 +1,4 @@
 
-
-
-
 document.addEventListener("turbo:load", initHome);
 
 function initHome()

@@ -56,6 +56,8 @@ class Sorties
     private ?string $infosSortie = null;
 
     #[ORM\Column(length: 350, nullable: true)]
+    #[Assert\NotBlank(message:'L\'annulation doit avoir un motif',
+    groups: ['cancel'])]
     private ?string $motifAnnulation = null;
 
     #[ORM\Column(length: 255, nullable: true)]

@@ -23,12 +23,13 @@
 {% endfor %}
 <tr>
     <td>
-        <input type="text">
+        <input type="text" id="addNomVille" placeholder="Nom de la ville">
     </td>
     <td>
-        <input type="text">
+        <input type="text" id="addCodePostal" placeholder="Code postal">
     </td>
     <td>
-        <strong> - </strong><a href="{{ path('app_home_index') }}">Ajouter</a>
+        <strong> - </strong>
+        <a href="#" id="btnAjouterVille">Ajouter</a>
     </td>
 </tr>

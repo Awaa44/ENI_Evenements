@@ -22,6 +22,7 @@ document.addEventListener("turbo:load", () => {
 
                 // 🔥 Re-attacher les événements après mise à jour du tableau
                 attachModalEvents();
+                attachAddEvent();
             });
     }
 
@@ -70,7 +71,61 @@ document.addEventListener("turbo:load", () => {
         }
     });
 
-    // Initialisation au chargement
+    /* =========================
+                AJOUT
+    ========================= */
+
+    function attachAddEvent()
+    {
+
+        const btnAdd = document.getElementById("btnAjouterVille");
+
+        if (!btnAdd) return;
+
+        btnAdd.addEventListener("click", function (e) {
+            e.preventDefault();
+
+            const nom = document.getElementById("addNomVille").value.trim();
+            const codePostal = document.getElementById("addCodePostal").value.trim();
+
+            // Validation JS
+            if (nom === "" || codePostal === "") {
+                alert("Tous les champs sont obligatoires");
+                return;
+            }
+
+            if (!/^[0-9]{5}$/.test(codePostal)) {
+                alert("Le code postal doit contenir 5 chiffres");
+                return;
+            }
+
+            fetch("/ville/ajouter", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: "nom=" + encodeURIComponent(nom) +
+                    "&codePostal=" + encodeURIComponent(codePostal)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.text().then(text => { throw new Error(text); });
+                    }
+                    return response.text();
+                })
+                .then(html => {
+                    document.getElementById("tabVille").innerHTML = html;
+
+                    // Réattacher les events
+                    attachModalEvents();
+                    attachAddEvent();
+                })
+                .catch(error => {
+                    alert(error.message);
+                });
+        });
+    }
     attachModalEvents();
+    attachAddEvent();
 
 });

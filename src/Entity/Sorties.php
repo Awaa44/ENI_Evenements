@@ -78,8 +78,8 @@ class Sorties
     #[ORM\Column(nullable: true)]
     private ?int $etatSortie = null;
 
-    #[ORM\ManyToOne(inversedBy: 'sorties')]
-    #[ORM\JoinColumn(nullable: false, onDelete: "CASCADE")]
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
     private ?Lieux $lieux = null;
 
     public function __construct()

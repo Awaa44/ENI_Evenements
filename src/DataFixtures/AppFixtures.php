@@ -136,15 +136,15 @@ class AppFixtures extends Fixture
 
             // 50% de chances d'être dans le passé ou le futur
             if (rand(0, 1)) {
-                // Date dans le futur (1 à 30 jours)
-                $dateDebut = (new \DateTime())->modify('+' . rand(1, 30) . ' days');
+                // Date dans le futur (10 à 30 jours)
+                $dateDebut = (new \DateTime())->modify('+' . rand(10, 30) . ' days');
             } else {
-                // Date dans le passé (1 à 30 jours)
-                $dateDebut = (new \DateTime())->modify('-' . rand(1, 30) . ' days');
+                // Date dans le passé (10 à 30 jours)
+                $dateDebut = (new \DateTime())->modify('-' . rand(10, 30) . ' days');
             }
 
             // Date limite toujours AVANT la date de début
-            $dateLimite = (clone $dateDebut)->modify('-' . rand(1, 10) . ' days');
+            $dateLimite = (clone $dateDebut)->modify('-' . rand(5, 10) . ' days');
 
             $sortie->setNom($themes[array_rand($themes)] . " #$i");
             $sortie->setDateHeureDebut($dateDebut);
@@ -154,6 +154,7 @@ class AppFixtures extends Fixture
             $sortie->setInfosSortie("sortie organisée autour du thème " . $sortie->getNom());
             $sortie->setUrlPhoto(null);
             $sortie->setOrganisateur($participants[array_rand($participants)]);
+            $sortie->setMotifAnnulation(null);
             $sortie->setEtats($etats[array_rand($etats)]);
             $sortie->setLieux($lieux[array_rand($lieux)]);
 

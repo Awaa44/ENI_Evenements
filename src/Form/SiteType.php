@@ -2,21 +2,19 @@
 
 namespace App\Form;
 
-
-use App\Entity\Sorties;
+use App\Entity\Sites;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class CancelType extends AbstractType
+class SiteType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-
-            ->add('motifAnnulation', TextAreaType::class, [
-                'label' => 'Motif annulation',
+            ->add('nomSite', TextType::class, [
+                'label' => false,
                 'required' => false,
             ])
         ;
@@ -25,8 +23,7 @@ class CancelType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Sorties::class,
-            'validation_groups' => ['cancel'],
+            'data_class' => Sites::class,
         ]);
     }
 }

@@ -21,8 +21,10 @@
             <p class="card-body pt-0">Ville : {{ sortie.lieux.villes.nomVille }}</p>
             <p class="card-body pt-0">Latitude : {{ sortie.lieux.latitude }}</p>
             <p class="card-body pt-0">Longitude : {{ sortie.lieux.longitude }}</p>
+            {% if is_granted('ROLE_ADMIN') or (app.user and sortie.organisateur == app.user) %}
             <a class="btn btn-warning"
                href="{{ path('app_sortie_update', {id: sortie.id}) }}" role="button">Modifier</a>
+            {% endif %}
         </div>
     </div>
     <h3>Liste des participants à la sortie</h3>

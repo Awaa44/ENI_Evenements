@@ -94,4 +94,15 @@ final class SiteController extends AbstractController
         $this->addFlash('danger', $message);
         return $this->redirectToRoute('app_site_detail');
     }
+
+    #[Route('/filter', name: '_filter', methods: ['GET'])]
+    public function filterSite(Request $request, SitesRepository $sitesRepository): Response
+    {
+        $siteSaisie = $request->query->get('nomSite');
+        $site = $sitesRepository->findBySite($siteSaisie);
+
+        return $this->render('site/detail.html.twig', [
+            'site' => $site,
+        ]);
+    }
 }

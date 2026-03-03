@@ -3,43 +3,62 @@
 {% block title %}Listes des utilisateurs{% endblock %}
 
 {% block body %}
+    <div class="container mt-4 mb-5 pb-5">
+        <div class="card shadow">
+            <div class="card-body">
+                <h2 class="text-center mb-4">Liste des utilisateurs</h2>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped table-hover">
+                    <thead class="table-secondary">
+                    <tr>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>Pseudo</th>
+                        <th>Téléphone</th>
+                        <th>Email</th>
+                        <th>Site</th>
+                        <th>Actif</th>
+                        <th>Rôles</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for participant in participants %}
+                        <tr>
+                            <td>{{ participant.nom }}</td>
+                            <td>{{ participant.prenom }}</td>
+                            <td>{{ participant.pseudo }}</td>
+                            <td>{{ participant.telephone }}</td>
+                            <td>{{ participant.email }}</td>
+                            <td>{{ participant.sites.nomSite }}</td>
+                            <td>{{ participant.actif ? 'Oui' : 'Non' }}</td>
+                            <td>{{ participant.roles|join(', ') }}</td>
+                            <td>
+                                {% if participant.actif %}
+                                    <a href="{{ path('app_admin_deactivate_user', {id: participant.id}) }}"
+                                       class="btn btn-warning btn-sm">Rendre inactif</a>
+                                {% else %}
+                                    <a href="{{ path('app_admin_activate_user', {id: participant.id}) }}"
+                                       class="btn btn-success btn-sm">Activer</a>
+                                {% endif %}
+                                <a href="{{ path('app_admin_delete_user', {id: participant.id}) }}"
+                                   class="btn btn-danger btn-sm"
+                                   onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')">
+                                    Supprimer
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
 
-    <h1>Utilisateurs</h1>
-
-    <table>
-        <thead>
-        <tr>
-            <th>Nom</th>
-            <th>Prénom</th>
-            <th>Pseudo</th>
-            <th>Téléphone</th>
-            <th>Email</th>
-            <th>Sites</th>
-            <th>Actif</th>
-            <th>Rôles</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for participant in participants %}
-            <tr>
-                <td>{{ participant.nom }}</td>
-                <td>{{ participant.prenom }}</td>
-                <td>{{ participant.pseudo }}</td>
-                <td>{{ participant.telephone }}</td>
-                <td>{{ participant.email }}</td>
-                <td>{{ participant.sites.nomSite }}</td>
-                <td>{{ participant.actif ? 'Oui' : 'Non' }}</td>
-                <td>{{ participant.roles|join(', ') }}</td>
-                <td>
-                    <button class="btn btn-warning btn-sm">Rendre inactif</button>
-                    <button class="btn btn-danger btn-sm">Supprimer</button>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ path('app_home_index') }}" class="btn btn-secondary">Retour</a>
-
+                <div class="text-center mt-3">
+                    <a href="{{ path('app_admin_import_csv') }}" class="btn btn-success">Importer un CSV</a>
+                    <a href="{{ path('app_home_index') }}" class="btn btn-secondary">Retour</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
 {% endblock %}

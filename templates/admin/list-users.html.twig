@@ -36,15 +36,21 @@
                             <td>{{ participant.roles|join(', ') }}</td>
                             <td>
                                 {% if participant.actif %}
-                                    <a href="{{ path('app_admin_deactivate_user', {id: participant.id}) }}"
-                                       class="btn btn-warning btn-sm">Rendre inactif</a>
+                                    <a href="{{ path('app_admin_deactivate_user', {id: participant.id, '_token': csrf_token('deactivate' ~ participant.id)}) }}"
+                                       class="btn btn-warning btn-sm"
+                                       onclick="return confirm('Êtes-vous sûr de vouloir désactiver {{ participant.prenom }} {{ participant.nom }} ?')">
+                                        Rendre inactif
+                                    </a>
                                 {% else %}
-                                    <a href="{{ path('app_admin_activate_user', {id: participant.id}) }}"
-                                       class="btn btn-success btn-sm">Activer</a>
+                                    <a href="{{ path('app_admin_activate_user', {id: participant.id, '_token': csrf_token('activate' ~ participant.id)}) }}"
+                                       class="btn btn-success btn-sm"
+                                       onclick="return confirm('Êtes-vous sûr de vouloir activer {{ participant.prenom }} {{ participant.nom }} ?')">
+                                        Activer
+                                    </a>
                                 {% endif %}
-                                <a href="{{ path('app_admin_delete_user', {id: participant.id}) }}"
+                                <a href="{{ path('app_admin_delete_user', {id: participant.id, '_token': csrf_token('delete' ~ participant.id)}) }}"
                                    class="btn btn-danger btn-sm"
-                                   onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')">
+                                   onclick="return confirm('Êtes-vous sûr de vouloir supprimer {{ participant.prenom }} {{ participant.nom }} ? Cette action est irréversible.')">
                                     Supprimer
                                 </a>
                             </td>

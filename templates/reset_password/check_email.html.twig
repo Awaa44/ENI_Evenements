@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Email envoyé{% endblock %}
+
+{% block body %}
+    <div class="container mt-4 mb-5 pb-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow">
+                    <div class="card-body text-center p-5">
+                        <h2 class="mb-4">Email envoyé !</h2>
+                        <p class="text-muted">Si un compte correspond à votre email, un lien de réinitialisation vient d'être envoyé.</p>
+                        <p class="text-muted">Ce lien expirera dans <strong>1 heure</strong>.</p>
+                        <p class="text-muted">Si vous ne recevez pas d'email, <a href="{{ path('app_forgot_password_request') }}">réessayez</a>.</p>
+                        <a href="{{ path('app_login') }}" class="btn btn-secondary mt-2">Retour à la connexion</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

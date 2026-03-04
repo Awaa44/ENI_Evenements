@@ -123,47 +123,73 @@ final class AdminController extends AbstractController
         ]);
     }
 
-    #[Route('/admin/deactivate_user/{id}', name: 'app_admin_deactivate_user')]
+    #[Route('/admin/deactivate_user/{id}', name: 'app_admin_deactivate_user', requirements: ['id' => '\d+'])]
     #[IsGranted('ROLE_ADMIN')]
-    public function deactivateUser(Participants $participant, EntityManagerInterface $entityManager): Response
+    public function deactivateUser(Request $request, Participants $participant, EntityManagerInterface $entityManager): Response
     {
+        $token = $request->query->get('_token');
 
-        $participant->setActif(false);
+        if ($this->isCsrfTokenValid('deactivate' . $participant->getId(), $token)) {
+            $participant->setActif(false);
+            $entityManager->persist($participant);
+            $entityManager->flush();
 
-        $entityManager->persist($participant);
-        $entityManager->flush();
+            $this->addFlash('success', "Le compte de cet utilisateur a été désactivé avec succès !");
+            return $this->redirectToRoute('app_admin_list_users');
+        }
 
-        $this->addFlash('success', "Le compte de cet utilisateur à été déactivée avec succès !");
-
+        $this->addFlash('danger', "Impossible de désactiver cet utilisateur.");
         return $this->redirectToRoute('app_admin_list_users');
     }
 
-    #[Route('/admin/activate_user/{id}', name: 'app_admin_activate_user')]
+    #[Route('/admin/activate_user/{id}', name: 'app_admin_activate_user', requirements: ['id' => '\d+'])]
     #[IsGranted('ROLE_ADMIN')]
-    public function activateUser(Participants $participant, EntityManagerInterface $entityManager): Response
+    public function activateUser(Request $request, Participants $participant, EntityManagerInterface $entityManager): Response
     {
+        $token = $request->query->get('_token');
 
-        $participant->setActif(true);
+        if ($this->isCsrfTokenValid('activate' . $participant->getId(), $token)) {
+            $participant->setActif(true);
+            $entityManager->persist($participant);
+            $entityManager->flush();
 
-        $entityManager->persist($participant);
-        $entityManager->flush();
+            $this->addFlash('success', "Le compte de cet utilisateur a été activé avec succès !");
+            return $this->redirectToRoute('app_admin_list_users');
+        }
 
-        $this->addFlash('success', "Le compte de cet utilisateur à été activée avec succès !");
-
+        $this->addFlash('danger', "Impossible d'activer cet utilisateur.");
         return $this->redirectToRoute('app_admin_list_users');
     }
 
-    #[Route('/admin/delete_user/{id}', name: 'app_admin_delete_user')]
+    #[Route('/admin/delete_user/{id}', name: 'app_admin_delete_user',  requirements: ['id' => '\d+'])]
     #[IsGranted('ROLE_ADMIN')]
-    public function deleteUser(Participants $participant, EntityManagerInterface $entityManager): Response
+    public function deleteUser(Request $request, Participants $participant, EntityManagerInterface $entityManager): Response
     {
+        $token = $request->query->get('_token');
 
-        $entityManager->remove($participant);
-        $entityManager->flush();
+        if ($this->isCsrfTokenValid('delete' . $participant->getId(), $token)) {
 
-        $this->addFlash('success', "Le compte de cet utilisateur à été supprimé avec succès !");
+            // Supprime toutes les sorties dont il est organisateur (et leurs inscriptions)
+            foreach ($participant->getSorties() as $sortie) {
+                foreach ($sortie->getInscriptions() as $inscription) {
+                    $entityManager->remove($inscription);
+                }
+                $entityManager->remove($sortie);
+            }
 
-        return $this->redirectToRoute('app_admin_list_users');
-    }
+            // Supprime ses propres inscriptions à d'autres sorties
+            foreach ($participant->getInscriptions() as $inscription) {
+                $entityManager->remove($inscription);
+            }
+
+            $entityManager->remove($participant);
+            $entityManager->flush();
+
+            $this->addFlash('success', "Le compte de cet utilisateur a été supprimé avec succès !");
+            return $this->redirectToRoute('app_admin_list_users');
+        }
+
+        $this->addFlash('danger', "Impossible de supprimer cet utilisateur.");
+        return $this->redirectToRoute('app_admin_list_users');    }
 
 }

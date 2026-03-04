@@ -11,9 +11,14 @@
                         <h2 class="text-center mb-4">Connexion</h2>
                     </div>
                     <div class="card-body">
-
                         {% if error %}
-                            <div class="alert alert-danger">Identifiants ou mot de passe incorrects, veuillez réessayer.</div>
+                            <div class="alert alert-danger">
+                                {% if error.message == 'Votre compte est inactif. Veuillez contacter un administrateur.' %}
+                                    Votre compte n'est plus actif. Veuillez contacter un administrateur.
+                                {% else %}
+                                    Identifiants ou mot de passe incorrects, veuillez réessayer.
+                                {% endif %}
+                            </div>
                         {% endif %}
 
                         <form method="post">

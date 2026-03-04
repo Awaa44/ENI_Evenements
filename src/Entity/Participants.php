@@ -235,9 +235,9 @@ class Participants implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function isActif(): ?bool
+    public function isActif(): bool
     {
-        return $this->actif;
+        return $this->actif ?? false;
     }
 
     public function setActif(bool $actif): static

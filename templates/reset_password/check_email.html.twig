@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Email envoyé{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <div class="card shadow">
+            <div class="card-body text-center">
+                <h2>Email envoyé !</h2>
+                <p>Si un compte correspond à votre email, un lien de réinitialisation vient d'être envoyé.</p>
+                <p>Ce lien expirera dans 1 heure.</p>
+                <p>Si vous ne recevez pas d'email, <a href="{{ path('app_forgot_password_request') }}">réessayez</a>.</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}

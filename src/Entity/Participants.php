@@ -69,6 +69,12 @@ class Participants implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?bool $actif = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $resetToken = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $resetTokenExpiry = null;
+
     /**
      * @var Collection<int, Inscriptions>
      */
@@ -244,6 +250,28 @@ class Participants implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->actif = $actif;
 
+        return $this;
+    }
+
+    public function getResetToken(): ?string
+    {
+        return $this->resetToken;
+    }
+
+    public function setResetToken(?string $resetToken): static
+    {
+        $this->resetToken = $resetToken;
+        return $this;
+    }
+
+    public function getResetTokenExpiry(): ?\DateTimeImmutable
+    {
+        return $this->resetTokenExpiry;
+    }
+
+    public function setResetTokenExpiry(?\DateTimeImmutable $resetTokenExpiry): static
+    {
+        $this->resetTokenExpiry = $resetTokenExpiry;
         return $this;
     }
 

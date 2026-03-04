@@ -38,17 +38,7 @@ final class HomeController extends AbstractController
             throw new \Exception("Utilisateur introuvable");
         }
         $idParticipant = $user->getId();
-        //Tableau
         $tableau = $sortieRepository->getSortiesHome($idParticipant);
-//        $tableauQuery = $sortieRepository->getSortiesHome($idParticipant);
-//
-//        $tableau = $paginator->paginate(
-//            $tableauQuery,
-//            $request->query->getInt('page', 1),
-//            10
-//        );
-        // Mise en session  de la requete
-//        $request->getSession()->set('tableau', $tableau);
 
         return $this->render('home/index.html.twig', [
             'sites' => $sites,

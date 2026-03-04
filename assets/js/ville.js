@@ -114,7 +114,7 @@ document.addEventListener("turbo:load", () => {
                     return response.text();
                 })
                 .then(html => {
-                    document.getElementById("tabVille").innerHTML = html;
+                    document.getElementById("tabVille").innerHTML =  html;
 
                     // Réattacher les events
                     attachModalEvents();

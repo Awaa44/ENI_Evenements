@@ -32,9 +32,6 @@ final class VilleController extends AbstractController
     {
         $villeSaisie = $request->query->get('nom');
         $villes = $villesRepository->findNameVille($villeSaisie);
-        if (!$villes) {
-            throw new \Exception("Saisie de la ville incorrecte");
-        }
 
         return $this->render('ville/_tbody.html.twig', [
             'villes' => $villes

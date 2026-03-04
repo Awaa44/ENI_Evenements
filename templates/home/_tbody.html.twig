@@ -9,8 +9,10 @@
         <td><a href="{{ path('app_profile_show', { id: data.idOrganisateur }) }}">{{ data.organisateur }}</a></td>
         <td>
             {% if data.etat == 'Ouverte' %}
-                <strong> - </strong><a href="{{ path('app_sortie_cancel', { id: data.id}) }}">Annuler</a>
-                {% if data.inscrit != 'X' and data.dateLimiteInscription > date()  %}
+                {% if is_granted('ROLE_ADMIN') %}
+                    <strong> - </strong><a href="{{ path('app_sortie_cancel', { id: data.id}) }}">Annuler</a>
+                {% endif %}
+                {% if data.inscrit != 'X' and data.dateLimiteInscription > date() and (is_granted('ROLE_ADMIN') or data.idOrganisateur == app.user.id)  %}
                     <strong> - </strong><a href="{{ path('app_home_inscrire', { idSortie: data.id}) }}"
                        onclick="return confirm('Etes vous vraiment sûr de vouloir vous inscrire a cette sortie : {{ data.nom }} ?')">
                         S'inscrire
@@ -18,19 +20,27 @@
                 {% endif %}
             {% endif %}
             {% if data.etat == 'Créée' %}
-                <strong> - </strong><a href="{{ path('app_sortie_update', { id: data.id}) }}">Modifier</a>
-                <strong> - </strong><a href="{{ path('app_home_publier', { idSortie: data.id}) }}"
-                   onclick="return confirm('Etes vous vraiment sûr de vouloir publier cette sortie : {{ data.nom }} ?')">
-                    Publier
-                </a>
+                {% if is_granted('ROLE_ADMIN') or (data.idOrganisateur == app.user.id) %}
+                    <strong> - </strong>
+                    <a href="{{ path('app_sortie_update', { id: data.id}) }}">Modifier</a>
+                {% endif %}
+                {% if is_granted('ROLE_ADMIN') %}
+                    <strong> - </strong>
+                    <a href="{{ path('app_home_publier', { idSortie: data.id}) }}"
+                       onclick="return confirm('Etes vous vraiment sûr de vouloir publier cette sortie : {{ data.nom }} ?')">
+                        Publier
+                    </a>
+                {% endif %}
             {% endif %}
             {% if data.inscrit == 'X' %}
-                <strong> - </strong><a href="{{ path('app_home_desister', { idSortie: data.id}) }}"
+                <strong> - </strong>
+                <a href="{{ path('app_home_desister', { idSortie: data.id}) }}"
                    onclick="return confirm('Etes vous vraiment sûr de vouloir vous désister de la sortie {{ data.nom }} ?')">
                     Se Désister
                 </a>
             {% endif %}
-            <strong> - </strong><a href="{{ path('app_sortie_detail', { id: data.id}) }}">Afficher</a>
+            <strong> - </strong>
+            <a href="{{ path('app_sortie_detail', { id: data.id}) }}">Afficher</a>
         </td>
         <td>{{ data.site }}</td>
     </tr>

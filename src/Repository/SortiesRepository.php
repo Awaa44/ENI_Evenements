@@ -15,7 +15,11 @@ class SortiesRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Sorties::class);
     }
-    public function getSortiesHome(int $participantId,array $filtres = []): array
+
+    /**
+     * @throws \Exception
+     */
+    public function getSortiesHome(int $participantId, array $filtres = []): array
     {
         $query = $this->createQueryBuilder('sorties')
             ->select(
@@ -91,6 +95,12 @@ class SortiesRepository extends ServiceEntityRepository
             $query->andWhere('sorties.dateHeureDebut < :now')
                 ->setParameter('now', new \DateTime());
         }
+
+        // Limiter aux sorties dans le mois à venir
+        $unMoisEnArriere = (new \DateTime())->modify('-1 month');
+
+        $query->andWhere('sorties.dateHeureDebut >= :unMoisEnArriere')
+            ->setParameter('unMoisEnArriere', $unMoisEnArriere);
 
         return $query->getQuery()->getArrayResult();
     }

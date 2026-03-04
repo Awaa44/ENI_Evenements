@@ -136,7 +136,6 @@ final class SortieController extends AbstractController
         return $this->json($listLieux);
     }
 
-    #[IsGranted("ROLE_USER")]
     #[Route('/update/{id}', name: '_update', requirements: ['id'=> '\d+'])]
     public function updateSortie(Request $request, EntityManagerInterface $em, Sorties $sortie,
                                  EtatsRepository $etatsRepository): Response

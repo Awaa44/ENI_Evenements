@@ -29,6 +29,7 @@ final class SortieController extends AbstractController
     #[Route('/{id}', name: '_detail', requirements: ['id' => '\d+'], methods: ['GET'])]
     public function afficherDetail(SortiesRepository $sortieRepository, int $id): Response
     {
+        //fonction custom pour passer de 6 requêtes à 1
         $sortie = $sortieRepository->getSortieById($id);
 
         return $this->render('sortie/detail.html.twig', [

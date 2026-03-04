@@ -22,7 +22,7 @@ class SitesRepository extends ServiceEntityRepository
             ->andWhere('sites.nomSite LIKE :nomSite')
             ->setParameter('nomSite', '%' . $nomSite . '%')
             ->getQuery()
-            ->getArrayResult();
+            ->getResult();
     }
 
     //    /**

@@ -6,24 +6,33 @@
 
     <h2 class="text-center p-3">Gérer les sites</h2>
 
+    <form action="{{ path('app_site_filter') }}" method="GET">
+        <div class="m-3">
+            <label for="saisieSite">Veuillez saisir le nom du site :</label>
+            <input type="text" name="nomSite" value="{{ nomSite ?? '' }}">
+            <button type="submit" name="saisieSite" value="saisieSite" class="btn btn-secondary">Rechercher</button>
+        </div>
+    </form>
+
     {{ form_start(site_form, {'attr': {'data-turbo': 'false'}}) }}
-    <table class="table">
-        <thead class="thead-dark">
-                <tr>
-                    <th>Nom du site</th>
-                    <th>Nombre de participants</th>
-                    <th>Action</th>
-                </tr>
-        </thead>
-        <tbody>
+    <div class="card mt-2 mb-2 w-150 m-auto">
+        <table class="table">
+            <thead class="thead-dark">
             <tr>
-                <td colspan="2">
+                <th>Nom du site</th>
+                <th class="text-center">Nombre de participants</th>
+                <th class="text-center">Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td class="text-center" colspan="2">
                     {{ form_widget(site_form.nomSite) }}
                     {{ form_errors(site_form.nomSite) }}
                 </td>
                 <td>
                     <button class="btn btn-primary" type="submit" value="create" name="create">
-                        Ajouter
+                        Ajouter un site
                     </button>
                 </td>
             </tr>
@@ -35,41 +44,47 @@
                         <form action="{{ path('app_site_update', {id: site.id}) }}" method="POST">
                             <input type="hidden" name="_token" value="{{ csrf_token('update'~site.id) }}">
                             <input type="text" name="nomSite" value="{{ site.nomSite }}" class="form-control d-none" id="input-{{ site.id }}">
-                            <button type="submit" class="btn btn-success btn-sm d-none" value="update" name="update" id="button-{{ site.id }}">
-                                Enregistrer </button>
-                            <button type="button"
-                                    class="btn btn-secondary btn-sm d-none"
-                                    value="cancel"
-                                    name="cancel"
-                                    id="cancel-{{ site.id }}"
-                                    onclick="document.getElementById('input-{{ site.id }}').classList.add('d-none');
-                                    document.getElementById('button-{{ site.id }}').classList.add('d-none');
-                                    document.getElementById('cancel-{{ site.id }}').classList.add('d-none');
-                                    document.getElementById('nom-{{ site.id }}').classList.remove('d-none') "
-                            >Annuler </button>
+                            <div class="mt-2">
+                                <button type="submit" class="btn btn-success btn-sm d-none" value="update" name="update" id="button-{{ site.id }}">
+                                    Enregistrer </button>
+                                <button type="button"
+                                        class="btn btn-secondary btn-sm d-none"
+                                        value="cancel"
+                                        name="cancel"
+                                        id="cancel-{{ site.id }}"
+                                        onclick="document.getElementById('input-{{ site.id }}').classList.add('d-none');
+                                            document.getElementById('button-{{ site.id }}').classList.add('d-none');
+                                            document.getElementById('cancel-{{ site.id }}').classList.add('d-none');
+                                            document.getElementById('nom-{{ site.id }}').classList.remove('d-none') "
+                                >Annuler </button>
+                            </div>
                         </form>
                     </td>
-                    <td>
+                    <td class="text-center">
                         <span>{{ site.participants.count }}</span>
                     </td>
-                    <td>
-                        <button type="button"
-                            class="btn btn-warning"
-                            onclick="document.getElementById('nom-{{ site.id }}').classList.add('d-none');
-                            document.getElementById('input-{{ site.id }}').classList.remove('d-none');
-                            document.getElementById('button-{{ site.id }}').classList.remove('d-none');
-                            document.getElementById('cancel-{{ site.id }}').classList.remove('d-none');"
-                        >Modifier
-                        </button>
+                    <td class="text-center">
+                        <span class="me-3">
+                            <button type="button"
+                                    class="btn btn-warning" style="background-color: #ffe589; border-color: #FFE066;"
+                                    onclick="document.getElementById('nom-{{ site.id }}').classList.add('d-none');
+                                        document.getElementById('input-{{ site.id }}').classList.remove('d-none');
+                                        document.getElementById('button-{{ site.id }}').classList.remove('d-none');
+                                        document.getElementById('cancel-{{ site.id }}').classList.remove('d-none');"
+                            >Modifier
+                            </button>
+                        </span>
                         <a href="{{ path('app_site_delete', {id: site.id, _token: csrf_token('delete' ~ site.id)}) }}"
-                              class="btn btn-danger"
-                              onclick="return confirm('Etes-vous sûr de vouloir supprimer ce site ?')"
+                           class="btn btn-danger"
+                           onclick="return confirm('Etes-vous sûr de vouloir supprimer ce site ?')"
                         >Supprimer
                         </a>
                     </td>
                 </tr>
             {% endfor %}
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    </div>
+
 
 {% endblock %}

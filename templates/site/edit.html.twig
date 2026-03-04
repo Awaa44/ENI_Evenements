@@ -8,7 +8,7 @@
 
     <form action="{{ path('app_site_filter') }}" method="GET">
         <div class="m-3">
-            <label for="saisieSite">Veuillez saisir le nom du site :</label>
+            <label for="saisieSite">Le nom du site contient :</label>
             <input type="text" name="nomSite" value="{{ nomSite ?? '' }}">
             <button type="submit" name="saisieSite" value="saisieSite" class="btn btn-secondary">Rechercher</button>
         </div>
@@ -21,7 +21,7 @@
             <tr>
                 <th>Nom du site</th>
                 <th class="text-center">Nombre de participants</th>
-                <th class="text-center">Action</th>
+                <th class="text-center">Actions</th>
             </tr>
             </thead>
             <tbody>

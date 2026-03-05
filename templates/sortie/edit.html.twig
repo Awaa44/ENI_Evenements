@@ -15,13 +15,12 @@
     {% else %}
         <h2 class="text-center p-2">Créer une sortie</h2>
     {% endif %}
-    <div class="row justify-content-center">
-        <div class="col-12 col-md-8">
 
-            {{ form_start(sortie_form) }}
-            {{ form_errors(sortie_form) }}
-            {{ form_widget(sortie_form.lieux, {'attr': {'class': 'form-select d-none'}}) }}
-
+    {{ form_start(sortie_form, {'attr': {'data-turbo': 'false'}}) }}
+    {{ form_errors(sortie_form) }}
+    {{ form_widget(sortie_form.lieux, {'attr': {'class': 'form-select d-none'}}) }}
+    <div class="row">
+        <div class="col-12 col-md-6 pe-md-4">
             <div class="group required-label">
                 {{ form_label(sortie_form.nom) }}
                 {{ form_widget(sortie_form.nom) }}
@@ -55,6 +54,8 @@
                 {{ form_widget(sortie_form.infosSortie) }}
                 {{ form_errors(sortie_form.infosSortie) }}
             </div>
+        </div>
+        <div class="col-12 col-md-6 ps-md-4">
             <br>
             <p class="card-body pt-0">Site organisateur : {{ sortie.organisateur.sites.nomSite }}</p>
             <div class="group required-label">
@@ -75,13 +76,12 @@
                 <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#maPopin">
                     Ajouter un lieu
                 </button>
-
             </div>
             <br>
             <p class="card-body pt-0">Rue : <span id="lieu-rue"></span></p>
             <p class="card-body pt-0">Code postal : <span id="lieu-cp"></span></p>
-            <br>
-            <div class="text-center">
+        </div>
+            <div class="text-center mt-4">
                 <button type="submit" class="btn btn-primary" value="creer" name="creer">
                     Enregistrer
                 </button>
@@ -130,7 +130,6 @@
                                 </button>
                             </div>
                             {{ form_end(lieu_form) }}
-
                         </div>
                     </div>
                 </div>

@@ -12,11 +12,13 @@
     {% include 'parts/_navbar.html.twig' %}
 
     {# Affichage du message Flash #}
-    {% for status, messages in app.flashes %}
-        {% for message in messages %}
-            <div class="alert alert-{{ status }}">{{ message }}</div>
+    <div class="container">
+        {% for status, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-{{ status }}">{{ message }}</div>
+            {% endfor %}
         {% endfor %}
-    {% endfor %}
+    </div>
 
     <main>
         <div class="container">

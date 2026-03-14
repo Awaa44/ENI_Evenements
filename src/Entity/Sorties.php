@@ -37,6 +37,7 @@ class Sorties
 
     #[ORM\Column(nullable: true)]
     #[Assert\NotBlank(message:'La sortie doit avoir une durée')]
+    #[Assert\GreaterThanOrEqual(value: 15, message: 'La durée de la sortie doit être supérieure ou égal à 15 min')]
     private ?int $duree = null;
 
     #[ORM\Column]
@@ -49,10 +50,13 @@ class Sorties
 
     #[ORM\Column]
     #[Assert\NotBlank(message:'La sortie doit avoir un nombre max d\'inscription')]
+    #[Assert\GreaterThanOrEqual(value: 5, message: 'Le nombre maximum d\'inscrit doit être supérieur ou égal à 5')]
     private ?int $nbInscriptionMax = null;
 
     #[ORM\Column(length: 500, nullable: true)]
     #[Assert\NotBlank(message:'La sortie doit avoir une description')]
+    #[Assert\Length(min:50, max:500, minMessage:'La sortie doit avoir une description d\'au moins 50 caractères',
+        maxMessage:'La sortie doit avoir une description d\'au maximum 500 caractères')]
     private ?string $infosSortie = null;
 
     #[ORM\Column(length: 350, nullable: true)]

@@ -154,7 +154,6 @@ class AppFixtures extends Fixture
             $sortie->setInfosSortie("sortie organisée autour du thème " . $sortie->getNom());
             $sortie->setUrlPhoto(null);
             $sortie->setOrganisateur($participants[array_rand($participants)]);
-            $sortie->setMotifAnnulation(null);
             $sortie->setEtats($etats[array_rand($etats)]);
             $sortie->setLieux($lieux[array_rand($lieux)]);
 

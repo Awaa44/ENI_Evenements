@@ -105,6 +105,7 @@ class SortiesRepository extends ServiceEntityRepository
         return $query->getQuery()->getArrayResult();
     }
 
+    //fonction custom pour passer de 6 requêtes à 1
     public function getSortieById(int $id): ?Sorties
     {
         return $this->createQueryBuilder('sorties')
